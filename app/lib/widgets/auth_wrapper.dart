@@ -16,6 +16,7 @@ import '../screens/pairing_screen.dart';
 import '../screens/main_screen.dart';
 import '../services/notification_service.dart';
 import 'editorial/editorial_styles.dart';
+import 'brand/us2/us2_logo.dart';
 
 /// Auth wrapper that handles authentication state and navigation
 ///
@@ -286,47 +287,41 @@ class _AuthWrapperState extends State<AuthWrapper> {
         decoration: const BoxDecoration(
           gradient: Us2Theme.backgroundGradient,
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo with glow effect
-                Text(
-                  brandName,
-                  style: GoogleFonts.pacifico(
-                    fontSize: 52,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Us2Theme.glowPink,
-                        blurRadius: 30,
-                      ),
-                      Shadow(
-                        color: Us2Theme.glowOrange,
-                        blurRadius: 50,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
 
-                // Status text
-                Text(
-                  message,
-                  style: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Us2Theme.textMedium,
-                  ),
-                ),
-                const SizedBox(height: 40),
+              // Logo with heart at top, centered
+              const Us2Logo(),
 
-                // Animated gradient dots
-                const _Us2LoadingDots(),
-              ],
-            ),
+              const Spacer(),
+
+              // Loading content in center
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Status text
+                    Text(
+                      message,
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontStyle: FontStyle.italic,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+
+                    // Animated gradient dots
+                    const _Us2LoadingDots(),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+            ],
           ),
         ),
       ),

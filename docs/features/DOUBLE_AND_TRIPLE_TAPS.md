@@ -8,8 +8,8 @@ This document lists all hidden debug features activated by tap gestures througho
 |--------|---------|--------|--------------|
 | Home Screen | Double-tap greeting | Opens DebugMenu | Medium |
 | Home Screen (Us2) | Double-tap logo | Opens DebugMenu | Medium |
-| Value Carousel | Double-tap | Opens DebugMenu | Medium |
-| Paywall Screen | Triple-tap title | Grants free subscription | **HIGH** |
+| Value Carousel | Double-tap logo | Opens DebugMenu | Low (gated ✅) |
+| Paywall Screen | Triple-tap title | Grants free subscription | Low (gated ✅) |
 | Paywall Screen | Tap bug icon | Toggle debug overlay | Low |
 
 ---
@@ -67,39 +67,43 @@ Us2Logo(onDoubleTap: onDebugTap),
 
 ---
 
-### 3. Value Carousel Screen (Onboarding) - Debug Menu
+### 3. Value Carousel Screen (Onboarding) - Debug Menu ✅ FIXED
 
 **File:** `app/lib/screens/onboarding/value_carousel_screen.dart`
 
-**Trigger:** Double-tap anywhere on the screen
+**Trigger:** Double-tap on logo
 
-**Line:** 234
+**Line:** 235-242
 
-**Action:** Opens DebugMenu
+**Action:** Opens DebugMenu (debug builds only)
 
 **Code:**
 ```dart
-onDoubleTap: () {
-  showDialog(
-    context: context,
-    builder: (context) => const DebugMenu(),
-  );
-},
+onDoubleTap: kDebugMode
+    ? () {
+        showDialog(
+          context: context,
+          builder: (context) => const DebugMenu(),
+        );
+      }
+    : null,
 ```
 
-**Risk:** Medium - Available during onboarding flow
+**Risk:** Low - Now gated behind `kDebugMode`
+
+**Note:** Logo (Us 2.0 + heart) is always visible, but double-tap only works in debug builds.
 
 ---
 
-### 4. Paywall Screen - Triple-Tap Subscription Bypass
+### 4. Paywall Screen - Triple-Tap Subscription Bypass ✅ FIXED
 
 **File:** `app/lib/screens/paywall_screen.dart`
 
 **Trigger:** Triple-tap on the paywall title text
 
-**Lines:** 146-160 (handler), 835 (GestureDetector)
+**Lines:** 146-164 (handler), 835 (GestureDetector)
 
-**Action:**
+**Action:** (debug builds only)
 1. Shows confirmation dialog
 2. Calls API to grant real subscription to couple
 3. Marks couple as premium in database
@@ -107,23 +111,22 @@ onDoubleTap: () {
 
 **Code:**
 ```dart
-void _handleTitleTap() {
-  _tapCount++;
-  _tapTimer?.cancel();
-  _tapTimer = Timer(const Duration(milliseconds: 500), () {
-    _tapCount = 0;
-  });
+void _handleDevTap() {
+  // ... tap counting logic ...
 
-  if (_tapCount >= 3) {
-    _tapCount = 0;
-    _activateDevBypass();
+  if (_devTapCount >= 3) {
+    _devTapCount = 0;
+    // Only allow dev bypass in debug builds - never in release
+    if (kDebugMode) {
+      _activateDevBypass();
+    }
   }
 }
 ```
 
 **API Call:** `POST /api/subscription/activate` with `productId: 'dev_bypass_test'`
 
-**Risk:** **HIGH** - This works in release builds and grants real subscriptions. A user who discovers this can bypass payment entirely.
+**Risk:** Low - Now gated behind `kDebugMode`, only works in debug builds.
 
 ---
 

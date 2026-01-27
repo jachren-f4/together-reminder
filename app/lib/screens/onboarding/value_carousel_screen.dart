@@ -154,8 +154,8 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
           SafeArea(
             child: Column(
               children: [
-                // Debug logo (top left) - only in debug mode
-                if (kDebugMode) _buildDebugLogo(),
+                // Logo at top, centered
+                _buildLogo(),
 
                 // Spacer pushes content to bottom
                 const Spacer(),
@@ -224,19 +224,22 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
     );
   }
 
-  Widget _buildDebugLogo() {
+  Widget _buildLogo() {
     return Padding(
       padding: const EdgeInsets.only(top: 116),
       child: Align(
         alignment: Alignment.topCenter,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onDoubleTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => const DebugMenu(),
-            );
-          },
+          // Only enable debug menu in debug mode
+          onDoubleTap: kDebugMode
+              ? () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const DebugMenu(),
+                  );
+                }
+              : null,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
