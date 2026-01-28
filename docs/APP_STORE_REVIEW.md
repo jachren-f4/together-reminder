@@ -367,6 +367,67 @@ EntitlementInfo? _getPremiumEntitlement() {
 
 ---
 
+### Submission #2 - Version 1.0.1 (Marketing & ASO Update)
+
+**Version:** 1.0.1 (Build 3)
+**Submitted:** January 28, 2026
+**Status:** 🔄 In Review
+
+#### What's New Text
+```
+Crossword improvements and bug fixes:
+• Improved clue readability with new text scaling
+• Fixed splash screen background display
+• Fixed contact links in Terms and Privacy pages
+```
+
+#### Changes Included
+
+**1. New App Store Screenshots (9 total)**
+- Professional marketing screenshots replacing placeholder images
+- Location: `mockups/app_store_screenshots/marketing/style-us2/output/`
+- Screens included:
+  - Home screen
+  - Quiz gameplay
+  - Insights/Results
+  - Word Search
+  - Alignment visualization
+  - Steps Together
+  - Collection/Rewards
+  - CTA/Download prompt
+  - Crossword puzzle
+
+**2. New Subtitle**
+- **Previous:** (empty)
+- **New:** "Daily games for two"
+
+**3. Keywords Updated**
+- **Previous:** `couples,relationship,quiz,love,dating,together,pair,connection,partner,marriage,attachment,anxious`
+- **New:** `couples,quiz,relationship,games,together,connect,partner,activities,questions,word,fun,sync,rewards`
+- **Rationale:**
+  - Added unique differentiators (`sync`, `rewards`, `word`)
+  - Removed competitor-adjacent terms (`pair`)
+  - Maximized 100 character limit
+
+**4. Code Fixes Included**
+| Fix | Description |
+|-----|-------------|
+| G4 Crossword Clues | Split text at spaces with FittedBox scaling for better readability |
+| Loading Screen | Gradient background now fills full screen width |
+| URL Launcher | Fixed Terms/Privacy links on Android 11+ (removed canLaunchUrl check, added manifest queries) |
+
+#### Related Documentation
+- ASO plan: `marketing_agent/apps/us2/aso_plan.md`
+- Release bundle: `marketing_agent/apps/us2/next_release_bundle.md`
+- Competitor research: `marketing_agent/apps/us2/competitor_keyword_research.md`
+
+#### Git Commit
+```
+6455b83 Implement G4 crossword clue system and fix URL launcher
+```
+
+---
+
 ## Lessons Learned
 
 ### 1. RevenueCat vs Server Authority
