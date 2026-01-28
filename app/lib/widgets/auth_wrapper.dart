@@ -283,45 +283,47 @@ class _AuthWrapperState extends State<AuthWrapper> {
   /// Us 2.0 styled loading screen
   Widget _buildUs2LoadingScreen(String brandName, String message) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: Us2Theme.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 60),
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: Us2Theme.backgroundGradient,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
 
-              // Logo with heart at top, centered
-              const Us2Logo(),
+                // Logo with heart at top, centered
+                const Us2Logo(),
 
-              const Spacer(),
+                const Spacer(),
 
-              // Loading content in center
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Status text
-                    Text(
-                      message,
-                      style: GoogleFonts.nunito(
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                        color: Us2Theme.textMedium,
+                // Loading content in center
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Status text
+                      Text(
+                        message,
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          color: Us2Theme.textMedium,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                    // Animated gradient dots
-                    const _Us2LoadingDots(),
-                  ],
+                      // Animated gradient dots
+                      const _Us2LoadingDots(),
+                    ],
+                  ),
                 ),
-              ),
 
-              const Spacer(),
-            ],
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),

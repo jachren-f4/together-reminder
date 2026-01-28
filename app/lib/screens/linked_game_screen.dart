@@ -1104,6 +1104,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       return _buildEmojiTextClueCell(clue, isDown, cellSize);
     }
 
+    // Check for emoji prefix (emoji followed by text)
+    final hasEmojiPrefix = _hasEmojiPrefix(clue.content);
+
+    // G4 style: Split at spaces with FittedBox for text with spaces
+    if (hasSpace && !isActuallyEmoji) {
+      return _buildG4StyleClueCell(clue, isDown, cellSize, hasEmojiPrefix, useKey: useKey);
+    }
+
     // Base font sizes (for 50px cells), then scale
     double baseFontSize;
     if (isActuallyEmoji) {
@@ -1114,7 +1122,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       baseFontSize = 14;
     } else if (textLength <= 8) {
       baseFontSize = 11;
-    } else if (textLength <= 12 || hasSpace) {
+    } else if (textLength <= 12) {
       baseFontSize = 9;
     } else {
       baseFontSize = 7;
@@ -1151,24 +1159,164 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    isActuallyEmoji ? clue.content : displayText,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: isActuallyEmoji ? null : 'Arial',
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0,
-                      height: 1.05,
-                      color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
-                    ),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                child: isActuallyEmoji
+                    ? Text(
+                        clue.content,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          height: 1.0,
+                        ),
+                      )
+                    : SizedBox(
+                        width: cellSize - 10,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            displayText,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0,
+                              color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+            Positioned(
+              bottom: isDown ? 1 : null,
+              right: isDown ? null : 1,
+              left: isDown ? 0 : null,
+              top: isDown ? null : 0,
+              child: Text(
+                isDown ? '▼' : '▶',
+                style: TextStyle(
+                  fontSize: 6 * scaleFactor,
+                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textSecondary,
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Check if content starts with an emoji character
+  bool _hasEmojiPrefix(String content) {
+    if (content.isEmpty) return false;
+    final emojiPattern = RegExp(
+      r'^[\u{1F300}-\u{1F9FF}]|^[\u{2600}-\u{26FF}]|^[\u{2700}-\u{27BF}]|^[\u{1F600}-\u{1F64F}]|^[\u{1F680}-\u{1F6FF}]',
+      unicode: true,
+    );
+    return emojiPattern.hasMatch(content);
+  }
+
+  /// Split content into emoji and text parts
+  Map<String, String> _splitEmojiAndText(String content) {
+    final emojiPattern = RegExp(
+      r'^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}])+',
+      unicode: true,
+    );
+
+    final match = emojiPattern.firstMatch(content);
+    if (match != null) {
+      return {
+        'emoji': match.group(0) ?? '',
+        'text': content.substring(match.end).trim(),
+      };
+    }
+    return {'emoji': '', 'text': content};
+  }
+
+  /// G4 style: Split text at spaces with FittedBox for auto-scaling
+  Widget _buildG4StyleClueCell(LinkedClue clue, bool isDown, double cellSize, bool hasEmojiPrefix, {bool useKey = false}) {
+    final scaleFactor = cellSize / 50.0;
+
+    // Extract emoji and text parts (if emoji exists)
+    String emoji = '';
+    String text = clue.content.toUpperCase();
+
+    if (hasEmojiPrefix) {
+      final parts = _splitEmojiAndText(clue.content);
+      emoji = parts['emoji'] ?? '';
+      text = parts['text']?.toUpperCase() ?? '';
+    }
+
+    // Split text at spaces
+    final words = text.split(' ');
+
+    return GestureDetector(
+      onTap: () => _showClueDialog(clue),
+      child: Container(
+        key: useKey ? _clueKey : null,
+        decoration: _isUs2
+            ? BoxDecoration(
+                gradient: Us2Theme.clueCellGradient,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Us2Theme.cellBorder, width: 1),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xE6FFFFFF),
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                    offset: Offset(0, 1),
+                  ),
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              )
+            : null,
+        color: _isUs2 ? null : BrandLoader().colors.selected,
+        padding: const EdgeInsets.all(2),
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Emoji on top (if present)
+                  if (emoji.isNotEmpty)
+                    Text(
+                      emoji,
+                      style: TextStyle(
+                        fontSize: 16 * scaleFactor,
+                        height: 1.0,
+                      ),
+                    ),
+                  // Each word on its own line with FittedBox
+                  ...words.map((word) =>
+                    SizedBox(
+                      width: cellSize - 8,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          word,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0,
+                            color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Direction arrow
             Positioned(
               bottom: isDown ? 1 : null,
               right: isDown ? null : 1,

@@ -1,0 +1,52 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "general",
+  "size": {
+    "rows": 7,
+    "cols": 5
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Expected", "arrow": "down", "target_index": 6 },
+    "2": { "type": "text", "content": "Truly", "arrow": "down", "target_index": 7 },
+    "3": { "type": "text", "content": "Before Q", "arrow": "down", "target_index": 8 },
+    "4": { "type": "text", "content": "START LIVING", "arrow": "down", "target_index": 9 },
+    "5": { "type": "text", "content": "Sauces", "arrow": "across", "target_index": 6 },
+    "6": { "type": "text", "content": "__IVERSE", "arrow": "across", "target_index": 11 },
+    "7": {
+      "across": { "type": "text", "content": "NOT_", "target_index": 14 },
+      "down": { "type": "text", "content": "Verb", "target_index": 18 }
+    },
+    "8": { "type": "emoji", "content": "✏️", "arrow": "across", "target_index": 16 },
+    "9": {
+      "across": { "type": "text", "content": "B___", "target_index": 22 },
+      "down": { "type": "text", "content": "NOT SHE", "target_index": 26 }
+    },
+    "10": { "type": "text", "content": "NOT SHE", "arrow": "across", "target_index": 26 },
+    "11": {
+      "across": { "type": "text", "content": "AFTER K", "target_index": 29 },
+      "down": { "type": "text", "content": "FLA_", "target_index": 33 }
+    },
+    "12": { "type": "text", "content": "Blade", "arrow": "across", "target_index": 31 }
+  },
+  "date": "2026-01-21",
+  "grid": [
+    ".", ".", ".", ".", ".",
+    ".", "D", "I", "P", "S",
+    ".", "U", "N", ".", "E",
+    ".", "E", "D", "I", "T",
+    ".", ".", "E", "S", "T",
+    ".", "H", "E", ".", "L",
+    ".", "E", "D", "G", "E"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4,
+    5, 0, 0, 0, 0,
+    6, 0, 0, 7, 0,
+    8, 0, 0, 0, 0,
+    0, 9, 0, 0, 0,
+    10, 0, 0, 11, 0,
+    12, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_5x7_004"
+}

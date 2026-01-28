@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/screens/auth_screen.dart';
@@ -41,6 +43,10 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
   int _currentPage = 0;
   static const int _totalSlides = 3;
 
+  // Gesture recognizers for Terms/Privacy links
+  late TapGestureRecognizer _termsRecognizer;
+  late TapGestureRecognizer _privacyRecognizer;
+
 
   // Slide content - using Large size (34/18) with medium shadows
   static const List<Map<String, dynamic>> _slides = [
@@ -66,6 +72,12 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
     super.initState();
     _pageController = PageController();
     _initializeVideo();
+
+    // Initialize tap recognizers for Terms/Privacy links
+    _termsRecognizer = TapGestureRecognizer()
+      ..onTap = () => _showLegalPopup('terms');
+    _privacyRecognizer = TapGestureRecognizer()
+      ..onTap = () => _showLegalPopup('privacy');
   }
 
   Future<void> _initializeVideo() async {
@@ -90,6 +102,8 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
   void dispose() {
     _videoController?.dispose();
     _pageController.dispose();
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     super.dispose();
   }
 
@@ -134,6 +148,15 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => AuthScreen(isNewUser: false),
+      ),
+    );
+  }
+
+  void _showLegalPopup(String type) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => _LegalContentScreen(type: type),
       ),
     );
   }
@@ -506,6 +529,7 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
               color: Colors.white.withOpacity(0.8),
               decoration: TextDecoration.underline,
             ),
+            recognizer: _termsRecognizer,
           ),
           const TextSpan(text: ' and '),
           TextSpan(
@@ -514,6 +538,7 @@ class _ValueCarouselScreenState extends State<ValueCarouselScreen> {
               color: Colors.white.withOpacity(0.8),
               decoration: TextDecoration.underline,
             ),
+            recognizer: _privacyRecognizer,
           ),
           const TextSpan(text: '.'),
         ],
@@ -603,6 +628,299 @@ class _AnimatedHeartState extends State<_AnimatedHeart>
           width: 20,
           height: 20,
         ),
+      ),
+    );
+  }
+}
+
+/// Full-screen legal content popup for Terms and Privacy Policy
+class _LegalContentScreen extends StatefulWidget {
+  final String type; // 'terms' or 'privacy'
+
+  const _LegalContentScreen({required this.type});
+
+  @override
+  State<_LegalContentScreen> createState() => _LegalContentScreenState();
+}
+
+class _LegalContentScreenState extends State<_LegalContentScreen> {
+  late TapGestureRecognizer _contactRecognizer;
+
+  String get _title => widget.type == 'terms' ? 'Terms of Service' : 'Privacy Policy';
+
+  @override
+  void initState() {
+    super.initState();
+    _contactRecognizer = TapGestureRecognizer()
+      ..onTap = () async {
+        final url = Uri.parse('https://jachren-f4.github.io/together-reminder');
+        // Don't use canLaunchUrl - it returns false on Android 11+ due to package visibility
+        // Just try to launch directly
+        try {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        } catch (e) {
+          debugPrint('Failed to launch URL: $e');
+        }
+      };
+  }
+
+  @override
+  void dispose() {
+    _contactRecognizer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF2D2D2D)),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          _title,
+          style: GoogleFonts.playfairDisplay(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF2D2D2D),
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widget.type == 'terms' ? _buildTermsContent(context) : _buildPrivacyContent(context),
+              ),
+            ),
+          ),
+          // Return button at bottom
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF6B6B),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    'Return',
+                    style: GoogleFonts.nunito(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildTermsContent(BuildContext context) {
+    return [
+      _buildSectionTitle('1. Acceptance of Terms'),
+      _buildParagraph(
+        'By downloading, installing, or using Us 2.0 ("the App"), you agree to be bound by these Terms of Service. '
+        'If you do not agree to these terms, please do not use the App.',
+      ),
+      _buildSectionTitle('2. Description of Service'),
+      _buildParagraph(
+        'Us 2.0 is a couples relationship app designed to help partners connect through daily activities, '
+        'quizzes, games, and shared experiences. The App is intended for use by couples who are 18 years or older.',
+      ),
+      _buildSectionTitle('3. User Accounts'),
+      _buildParagraph(
+        'To use the App, you must create an account and pair with your partner. You are responsible for '
+        'maintaining the confidentiality of your account and for all activities that occur under your account.',
+      ),
+      _buildSectionTitle('4. Acceptable Use'),
+      _buildParagraph(
+        'You agree to use the App only for lawful purposes and in accordance with these Terms. You agree not to:\n'
+        '• Use the App in any way that violates applicable laws\n'
+        '• Attempt to gain unauthorized access to any part of the App\n'
+        '• Interfere with or disrupt the App or servers\n'
+        '• Share your account credentials with anyone other than your paired partner',
+      ),
+      _buildSectionTitle('5. Subscription and Payments'),
+      _buildParagraph(
+        'Some features of the App require a paid subscription. Subscriptions automatically renew unless '
+        'cancelled at least 24 hours before the end of the current period. You can manage your subscription '
+        'through your app store account settings.',
+      ),
+      _buildSectionTitle('6. Intellectual Property'),
+      _buildParagraph(
+        'The App and its original content, features, and functionality are owned by Us 2.0 and are protected '
+        'by international copyright, trademark, and other intellectual property laws.',
+      ),
+      _buildSectionTitle('7. Termination'),
+      _buildParagraph(
+        'We may terminate or suspend your account at any time, without prior notice, for conduct that we '
+        'believe violates these Terms or is harmful to other users, us, or third parties.',
+      ),
+      _buildSectionTitle('8. Limitation of Liability'),
+      _buildParagraph(
+        'The App is provided "as is" without warranties of any kind. We shall not be liable for any indirect, '
+        'incidental, special, or consequential damages arising from your use of the App.',
+      ),
+      _buildSectionTitle('9. Changes to Terms'),
+      _buildParagraph(
+        'We reserve the right to modify these Terms at any time. We will notify users of significant changes '
+        'through the App. Your continued use of the App after changes constitutes acceptance of the new Terms.',
+      ),
+      _buildSectionTitle('10. Contact Us'),
+      _buildContactParagraph(context),
+      const SizedBox(height: 16),
+      _buildLastUpdated('January 2025'),
+    ];
+  }
+
+  List<Widget> _buildPrivacyContent(BuildContext context) {
+    return [
+      _buildSectionTitle('1. Information We Collect'),
+      _buildParagraph(
+        'We collect information you provide directly, including:\n'
+        '• Account information (email, name)\n'
+        '• Profile information (anniversary date, preferences)\n'
+        '• Activity data (quiz answers, game scores, app usage)\n'
+        '• Device information for push notifications',
+      ),
+      _buildSectionTitle('2. How We Use Your Information'),
+      _buildParagraph(
+        'We use your information to:\n'
+        '• Provide and improve the App experience\n'
+        '• Sync data between you and your partner\n'
+        '• Send push notifications for pokes and reminders\n'
+        '• Generate insights about your relationship\n'
+        '• Process subscription payments',
+      ),
+      _buildSectionTitle('3. Data Sharing'),
+      _buildParagraph(
+        'Your quiz answers, game results, and activity data are shared only with your paired partner. '
+        'We do not sell your personal information to third parties. We may share anonymized, aggregated '
+        'data for research or analytics purposes.',
+      ),
+      _buildSectionTitle('4. Data Security'),
+      _buildParagraph(
+        'We implement industry-standard security measures to protect your information. Data is encrypted '
+        'in transit and at rest. However, no method of transmission over the internet is 100% secure.',
+      ),
+      _buildSectionTitle('5. Data Retention'),
+      _buildParagraph(
+        'We retain your data for as long as your account is active. You can request deletion of your '
+        'account and associated data at any time through the App settings.',
+      ),
+      _buildSectionTitle('6. Your Rights'),
+      _buildParagraph(
+        'You have the right to:\n'
+        '• Access your personal data\n'
+        '• Correct inaccurate data\n'
+        '• Request deletion of your data\n'
+        '• Export your data\n'
+        '• Opt out of marketing communications',
+      ),
+      _buildSectionTitle('7. Children\'s Privacy'),
+      _buildParagraph(
+        'The App is not intended for users under 18 years of age. We do not knowingly collect information '
+        'from children under 18.',
+      ),
+      _buildSectionTitle('8. Third-Party Services'),
+      _buildParagraph(
+        'The App uses third-party services including:\n'
+        '• Firebase (analytics, notifications)\n'
+        '• RevenueCat (subscription management)\n'
+        '• Supabase (database, authentication)\n\n'
+        'These services have their own privacy policies.',
+      ),
+      _buildSectionTitle('9. Changes to Privacy Policy'),
+      _buildParagraph(
+        'We may update this Privacy Policy periodically. We will notify you of significant changes '
+        'through the App.',
+      ),
+      _buildSectionTitle('10. Contact Us'),
+      _buildContactParagraph(context, isPrivacy: true),
+      const SizedBox(height: 16),
+      _buildLastUpdated('January 2025'),
+    ];
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 8),
+      child: Text(
+        title,
+        style: GoogleFonts.nunito(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFF2D2D2D),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildParagraph(String text) {
+    return Text(
+      text,
+      style: GoogleFonts.nunito(
+        fontSize: 14,
+        height: 1.6,
+        color: const Color(0xFF5A5A5A),
+      ),
+    );
+  }
+
+  Widget _buildLastUpdated(String date) {
+    return Text(
+      'Last updated: $date',
+      style: GoogleFonts.nunito(
+        fontSize: 12,
+        fontStyle: FontStyle.italic,
+        color: const Color(0xFF8A8A8A),
+      ),
+    );
+  }
+
+  Widget _buildContactParagraph(BuildContext context, {bool isPrivacy = false}) {
+    final prefix = isPrivacy
+        ? 'For privacy-related questions, please '
+        : 'If you have questions about these Terms, please ';
+
+    return Text.rich(
+      TextSpan(
+        style: GoogleFonts.nunito(
+          fontSize: 14,
+          height: 1.6,
+          color: const Color(0xFF5A5A5A),
+        ),
+        children: [
+          TextSpan(text: prefix),
+          TextSpan(
+            text: 'contact us here',
+            style: const TextStyle(
+              color: Color(0xFFFF6B6B),
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: _contactRecognizer,
+          ),
+          const TextSpan(text: '.'),
+        ],
       ),
     );
   }

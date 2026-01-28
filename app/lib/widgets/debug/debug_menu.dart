@@ -11,6 +11,7 @@ import 'tabs/polling_tab.dart';
 import 'tabs/steps_debug_tab.dart';
 import 'tabs/unlock_popup_tab.dart';
 import 'tabs/onboarding_preview_tab.dart';
+import 'tabs/crossword_preview_tab.dart';
 
 /// Enhanced debug menu with tab-based interface
 class DebugMenu extends StatefulWidget {
@@ -26,7 +27,7 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 9, vsync: this);
+    _tabController = TabController(length: 10, vsync: this);
   }
 
   @override
@@ -71,12 +72,26 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '🐛 Debug Menu',
-                    style: AppTheme.headlineFont.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '🐛 Debug Menu',
+                        style: AppTheme.headlineFont.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      // Build version to verify hot reload - increment when testing
+                      Text(
+                        'Build: 2026-01-28-v12',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey.shade500,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -127,6 +142,7 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
                   Tab(text: 'Onboarding'),
                   Tab(text: 'Actions'),
                   Tab(text: 'Unlock'),
+                  Tab(text: 'Crossword'),
                   Tab(text: 'Steps'),
                   Tab(text: 'Polling'),
                   Tab(text: 'Overview'),
@@ -147,6 +163,7 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
                     OnboardingPreviewTab(),
                     ActionsTab(),
                     UnlockPopupTab(),
+                    CrosswordPreviewTab(),
                     StepsDebugTab(),
                     PollingTab(),
                     OverviewTab(),
