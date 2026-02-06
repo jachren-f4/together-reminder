@@ -19,7 +19,10 @@ interface AdminSession {
 
 function getAdminEmails(): string[] {
   const emails = process.env.ADMIN_EMAILS || '';
-  return emails.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+  const parsed = emails.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+  console.log('[Admin Auth] ADMIN_EMAILS env:', emails ? `"${emails}"` : '(not set)');
+  console.log('[Admin Auth] Parsed allowed emails:', parsed);
+  return parsed;
 }
 
 function getSessionSecret(): string {
