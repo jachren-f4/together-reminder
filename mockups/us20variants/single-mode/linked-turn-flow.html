@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked Turn Flow - Us 2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+  :root {
+    /* Us2Theme exact colors */
+    --bg-start: #FFD1C1;
+    --bg-end: #FFF5F0;
+    --text-dark: #3A3A3A;
+    --text-med: #5A5A5A;
+    --text-light: #707070;
+    --primary-pink: #FF5E62;
+    --accent-start: #FF6B6B;
+    --accent-end: #FF9F43;
+    --cream: #FFF8F0;
+    --beige: #F5E6D8;
+    --glow-pink: rgba(255,107,107,0.8);
+
+    /* Linked game colors */
+    --gold-light: #F5E6D0;
+    --gold-mid: #E8D5B8;
+    --gold-dark: #D4B896;
+    --gold-border: #C9A875;
+    --cell-cream: #FFFBF5;
+    --cell-border: #E8DDD0;
+    --void-dark: #4A2C2A;
+    --void-lighter: #5D3A3A;
+    --letter-pink: #E91E63;
+    --tile-gold-light: #FFE8A0;
+    --tile-gold-dark: #D4A855;
+    --tile-text: #5D4E37;
+
+    /* Avatar gradients */
+    --avatar-p1-start: #FF6B6B;
+    --avatar-p1-end: #FF5E62;
+    --avatar-p2-start: #6C9CE9;
+    --avatar-p2-end: #45B7D1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #F0F0F0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-dark);
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-med);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  /* Mode Tabs */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    background: #FFF;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .mode-tab {
+    padding: 14px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    position: relative;
+  }
+  .mode-tab.active {
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    color: #FFF;
+  }
+  .mode-tab:not(.active):hover {
+    color: var(--primary-pink);
+    background: var(--bg-end);
+  }
+
+  /* Steps Row */
+  .steps-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .step-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-label {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .step-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--accent-start);
+    padding-top: 380px;
+    flex-shrink: 0;
+  }
+
+  /* Phone Frame */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 2px #E0E0E0;
+    background: #FFF;
+    flex-shrink: 0;
+  }
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 34px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 100;
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  /* Warm Background (Us2 gradient) */
+  .warm-bg {
+    background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    min-height: 100%;
+    padding: 60px 16px 32px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== Us2 HEADER (from linked_game_screen.dart:610-676) ===== */
+  .us2-header {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+
+  /* Gradient back button - 30x30, 8px radius, accent gradient */
+  .us2-back-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(255,107,107,0.3);
+    flex-shrink: 0;
+  }
+  .us2-back-btn .material-icons-round {
+    font-size: 14px;
+    color: #FFF;
+    font-weight: bold;
+  }
+
+  /* Title: "CROSSWORD" Playfair 16px w700 letter-spacing 1.5 */
+  .us2-game-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-dark);
+    letter-spacing: 1.5px;
+    margin-left: 10px;
+  }
+
+  .us2-header-spacer { flex: 1; }
+
+  /* Score badges - accent gradient pills, 12px radius, 8h/4v padding */
+  .us2-score-badges {
+    display: flex;
+    gap: 6px;
+  }
+  .us2-score-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    font-size: 11px;
+    font-weight: 700;
+    color: #FFF;
+  }
+  .us2-score-badge.active {
+    box-shadow: 0 2px 6px rgba(255,107,107,0.3);
+  }
+  .us2-score-badge .heart-icon {
+    font-size: 11px;
+  }
+
+  /* ===== Us2 GRID (from linked_game_screen.dart:816-922) ===== */
+  /* Gold beveled frame */
+  .us2-grid-frame {
+    padding: 0 8px;
+    margin-bottom: 12px;
+  }
+  .us2-grid-outer {
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-mid), var(--gold-dark));
+    border-radius: 12px;
+    border: 1.5px solid var(--gold-border);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.4);
+    padding: 6px;
+  }
+  .us2-grid-inner {
+    background: var(--gold-mid);
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    padding: 4px;
+  }
+  .us2-crossword-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  /* Cell types */
+  .us2-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    position: relative;
+    border-radius: 4px;
+  }
+
+  /* Void cell: voidCellGradient + shadow */
+  .us2-cell.void {
+    background: linear-gradient(135deg, var(--void-lighter), var(--void-dark));
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+
+  /* Clue cell: clueCellGradient, cellBorder, text clues */
+  .us2-cell.clue {
+    background: linear-gradient(180deg, #FFFDF8, #FFF5E6);
+    border: 1px solid var(--cell-border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(0,0,0,0.08);
+    padding: 2px;
+    font-family: Arial, sans-serif;
+    font-weight: 800;
+    font-size: 9px;
+    color: var(--text-dark);
+    line-height: 1.0;
+    text-align: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .us2-cell.clue .clue-word {
+    display: block;
+    font-size: 9px;
+  }
+  .us2-cell.clue .arrow {
+    position: absolute;
+    font-size: 5px;
+    color: var(--text-light);
+  }
+  .us2-cell.clue .arrow.down {
+    bottom: 1px;
+    left: 0;
+  }
+  .us2-cell.clue .arrow.right {
+    top: 0;
+    right: 1px;
+  }
+
+  /* Answer cell empty: answerCellGradient, dashed border */
+  .us2-cell.empty-answer {
+    background: linear-gradient(180deg, #FFFFFF, #FFF8F8);
+    border: 1px dashed rgba(255,107,107,0.4);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 2px 6px rgba(255,107,107,0.2);
+  }
+
+  /* Answer cell locked (filled): answerCellGradient, cellBorder, pink text */
+  .us2-cell.locked {
+    background: linear-gradient(180deg, #FFFFFF, #FFF8F8);
+    border: 1px solid rgba(255,107,107,0.4);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 2px 6px rgba(255,107,107,0.2);
+    color: var(--letter-pink);
+  }
+
+  /* Answer cell draft: golden tile gradient, tileText */
+  .us2-cell.draft {
+    background: linear-gradient(180deg, var(--tile-gold-light), var(--tile-gold-dark));
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    color: var(--tile-text);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Answer cell highlighted: glow border */
+  .us2-cell.highlighted {
+    background: linear-gradient(180deg, #FFFFFF, #FFF8F8);
+    border: 2px solid var(--accent-start);
+    box-shadow: 0 0 12px rgba(255,107,107,0.6);
+    animation: pulse-cell 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-cell {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,107,107,0.4); }
+    50% { box-shadow: 0 0 16px rgba(255,107,107,0.7); }
+  }
+
+  /* ===== RACK (from linked_game_screen.dart:2017-2229) ===== */
+  /* Rack: No label by default (Us2 hides it), golden tiles */
+  .us2-rack {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+  }
+  .us2-rack-tile {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, var(--tile-gold-light), var(--tile-gold-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--tile-text);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+    cursor: grab;
+    transition: transform 0.15s;
+  }
+  .us2-rack-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .us2-rack-tile.empty-slot {
+    background: rgba(245,230,208,0.3);
+    border: 1.5px solid rgba(201,168,117,0.5);
+    box-shadow: none;
+    cursor: default;
+  }
+  .us2-rack-tile.empty-slot:hover {
+    transform: none;
+  }
+
+  /* ===== ACTION BAR (from linked_game_screen.dart:2351-2444) ===== */
+  .us2-action-bar {
+    display: flex;
+    gap: 10px;
+    padding: 6px 16px 16px;
+    margin-top: auto;
+  }
+  /* Hint button: accent gradient pill, 18px radius */
+  .us2-hint-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    box-shadow: 0 2px 8px rgba(255,107,107,0.3);
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFF;
+    border: none;
+    cursor: pointer;
+  }
+  .us2-hint-btn .material-icons-round {
+    font-size: 14px;
+  }
+  /* Submit button: gradient pill, 18px radius, flex-1 */
+  .us2-submit-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border-radius: 18px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s;
+  }
+  .us2-submit-btn.enabled {
+    background: linear-gradient(135deg, #FF7B6B, #FF9F6B);
+    color: #FFF;
+    box-shadow: 0 2px 8px rgba(255,107,107,0.3);
+  }
+  .us2-submit-btn.disabled {
+    background: linear-gradient(135deg, #D0D0D0, #B8B8B8);
+    color: #888;
+    opacity: 0.6;
+  }
+  .us2-submit-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  /* ===== DIALOG OVERLAY ===== */
+  .dialog-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 32px;
+  }
+
+  /* Us2 Dialog Card: cream bg, 24px radius, 300px, 28px padding */
+  /* From turn_complete_dialog.dart:230-379 */
+  .us2-dialog-card {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 28px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+
+  /* Dialog label: Nunito 11px w700 letter-spacing 2 textLight */
+  .us2-dialog-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Dialog title: Playfair 28px w600 textDark */
+  .us2-dialog-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+  }
+
+  /* Gradient accent divider: 50px wide, 2px, 1px radius */
+  .us2-dialog-divider {
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    border-radius: 1px;
+    margin: 0 auto 16px;
+  }
+
+  /* Dialog body: Nunito 15px textMedium */
+  .us2-dialog-body {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text-med);
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+
+  /* Partner name: gradient Playfair italic */
+  .us2-dialog-partner-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 15px;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Primary button: gradient, 14px radius, Nunito 13px w700, glow */
+  .us2-dialog-primary-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    color: #FFF;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+    margin-top: 28px;
+    margin-bottom: 16px;
+    transition: transform 0.15s;
+  }
+  .us2-dialog-primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(255,107,107,0.5);
+  }
+
+  /* Secondary link: Nunito 14px w500 textLight */
+  .us2-dialog-secondary {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+  }
+
+  /* Together-mode avatar in dialog: gradient circle */
+  .us2-dialog-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: #FFF;
+    margin: 16px auto;
+  }
+  .us2-dialog-avatar.p1 {
+    background: linear-gradient(135deg, var(--avatar-p1-start), var(--avatar-p1-end));
+    box-shadow: 0 0 24px rgba(255,94,98,0.3);
+  }
+  .us2-dialog-avatar.p2 {
+    background: linear-gradient(135deg, var(--avatar-p2-start), var(--avatar-p2-end));
+    box-shadow: 0 0 24px rgba(108,156,233,0.3);
+  }
+
+  /* Handoff hint: subtle text with lock icon */
+  .us2-dialog-hint {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .us2-dialog-hint .material-icons-round {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  /* Accent gradient icon circle (for PartnerFirst dialog) */
+  .us2-dialog-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .us2-dialog-icon-circle .material-icons-round {
+    font-size: 28px;
+    color: #FFF;
+  }
+
+  /* Home indicator */
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.15);
+    z-index: 200;
+  }
+
+  /* Hidden states */
+  .hidden { display: none !important; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .steps-row {
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-arrow {
+      padding-top: 0;
+      transform: rotate(90deg);
+      margin: -8px 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <h1 class="page-title">Linked Turn Flow</h1>
+  <p class="page-subtitle">Together Mode (single phone) vs Async Mode (two phones)</p>
+
+  <!-- Mode Tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('together')" id="tab-together">Together Mode</button>
+    <button class="mode-tab" onclick="switchMode('async')" id="tab-async">Current (Async)</button>
+  </div>
+
+  <!-- ==================== TOGETHER MODE ==================== -->
+  <div id="together-mode">
+    <div class="steps-row">
+
+      <!-- Step 1: Joakim's Turn (playing) -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 1 &mdash; Joakim plays</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg">
+
+              <!-- Us2 Header -->
+              <div class="us2-header">
+                <div class="us2-back-btn">
+                  <span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span>
+                </div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge active">
+                    <span class="heart-icon" style="color:#FFF;">&#9829;</span>
+                    You: 45
+                  </div>
+                  <div class="us2-score-badge">
+                    Taija: 38
+                  </div>
+                </div>
+              </div>
+
+              <!-- Us2 Gold Grid Frame -->
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer">
+                  <div class="us2-grid-inner">
+                    <div class="us2-crossword-grid">
+                      <!-- Row 1: clue, answer, answer, clue, void, clue, answer -->
+                      <div class="us2-cell clue"><span class="clue-word">ADORE</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell clue"><span class="clue-word">FEEL</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell clue"><span class="clue-word">HUG</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell locked">E</div>
+                      <!-- Row 2 -->
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">A</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <!-- Row 3: clue + highlighted active row -->
+                      <div class="us2-cell clue"><span class="clue-word">BODY</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell locked" style="border:2px solid var(--accent-start);box-shadow:0 0 12px rgba(255,107,107,0.6);">R</div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <!-- Row 4 -->
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">D</div>
+                      <div class="us2-cell void"></div>
+                      <!-- Row 5 -->
+                      <div class="us2-cell clue"><span class="clue-word">LIPS</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">K</div>
+                      <div class="us2-cell locked">I</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell void"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rack (no label in Us2 unless dragging) -->
+              <div class="us2-rack">
+                <div class="us2-rack-tile">H</div>
+                <div class="us2-rack-tile">E</div>
+                <div class="us2-rack-tile">A</div>
+                <div class="us2-rack-tile">T</div>
+                <div class="us2-rack-tile">S</div>
+              </div>
+
+              <!-- Us2 Action Bar -->
+              <div class="us2-action-bar">
+                <button class="us2-hint-btn">
+                  <span class="material-icons-round">lightbulb</span>
+                  Hint (3)
+                </button>
+                <button class="us2-submit-btn enabled">SUBMIT TURN</button>
+              </div>
+
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">&rarr;</div>
+
+      <!-- Step 2: Handoff Dialog (to Taija) - Us2 styled -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 2 &mdash; Handoff</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg" style="filter: blur(2px) brightness(0.7);">
+              <!-- Blurred background content -->
+              <div class="us2-header">
+                <div class="us2-back-btn"><span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span></div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge">You: 45</div>
+                  <div class="us2-score-badge">Taija: 38</div>
+                </div>
+              </div>
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer"><div class="us2-grid-inner" style="height:200px;"></div></div>
+              </div>
+            </div>
+
+            <!-- Us2 Turn Complete Dialog (together mode handoff) -->
+            <div class="dialog-overlay">
+              <div class="us2-dialog-card">
+                <div class="us2-dialog-label">TURN COMPLETE</div>
+                <div class="us2-dialog-title">Nice work!</div>
+                <div class="us2-dialog-divider"></div>
+                <div class="us2-dialog-body">All letters placed.</div>
+                <div class="us2-dialog-body" style="margin-bottom:0;">
+                  Pass the phone to <span class="us2-dialog-partner-name">Taija</span>
+                </div>
+
+                <!-- Partner avatar -->
+                <div class="us2-dialog-avatar p2">T</div>
+
+                <button class="us2-dialog-primary-btn">I'M READY</button>
+                <div class="us2-dialog-hint">
+                  <span class="material-icons-round">lock</span>
+                  Answers hidden until ready
+                </div>
+              </div>
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">&rarr;</div>
+
+      <!-- Step 3: Taija's Turn (playing) -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 3 &mdash; Taija plays</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg">
+
+              <!-- Us2 Header - Taija active -->
+              <div class="us2-header">
+                <div class="us2-back-btn">
+                  <span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span>
+                </div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge">
+                    Joakim: 45
+                  </div>
+                  <div class="us2-score-badge active">
+                    <span class="heart-icon" style="color:#FFF;">&#9829;</span>
+                    You: 52
+                  </div>
+                </div>
+              </div>
+
+              <!-- Us2 Gold Grid Frame - more filled in -->
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer">
+                  <div class="us2-grid-inner">
+                    <div class="us2-crossword-grid">
+                      <!-- Row 1 -->
+                      <div class="us2-cell clue"><span class="clue-word">ADORE</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell clue"><span class="clue-word">FEEL</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell clue"><span class="clue-word">HUG</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell locked">E</div>
+                      <!-- Row 2 -->
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">U</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">A</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <!-- Row 3: now filled from Joakim's turn -->
+                      <div class="us2-cell clue"><span class="clue-word">BODY</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">H</div>
+                      <div class="us2-cell locked">E</div>
+                      <div class="us2-cell locked">R</div>
+                      <div class="us2-cell locked">T</div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <!-- Row 4: Taija's active row -->
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell clue"><span class="clue-word">SOFT</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">D</div>
+                      <div class="us2-cell void"></div>
+                      <!-- Row 5 -->
+                      <div class="us2-cell clue"><span class="clue-word">LIPS</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">K</div>
+                      <div class="us2-cell locked">I</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell void"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rack with Taija's letters -->
+              <div class="us2-rack">
+                <div class="us2-rack-tile">T</div>
+                <div class="us2-rack-tile">N</div>
+                <div class="us2-rack-tile">D</div>
+                <div class="us2-rack-tile">E</div>
+                <div class="us2-rack-tile">R</div>
+              </div>
+
+              <!-- Us2 Action Bar -->
+              <div class="us2-action-bar">
+                <button class="us2-hint-btn">
+                  <span class="material-icons-round">lightbulb</span>
+                  Hint (2)
+                </button>
+                <button class="us2-submit-btn enabled">SUBMIT TURN</button>
+              </div>
+
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">&rarr;</div>
+
+      <!-- Step 4: Handoff Dialog (back to Joakim) -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 4 &mdash; Handoff</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg" style="filter: blur(2px) brightness(0.7);">
+              <div class="us2-header">
+                <div class="us2-back-btn"><span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span></div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge">Joakim: 45</div>
+                  <div class="us2-score-badge">You: 52</div>
+                </div>
+              </div>
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer"><div class="us2-grid-inner" style="height:200px;"></div></div>
+              </div>
+            </div>
+
+            <!-- Us2 Turn Complete Dialog (handoff back to Joakim) -->
+            <div class="dialog-overlay">
+              <div class="us2-dialog-card">
+                <div class="us2-dialog-label">TURN COMPLETE</div>
+                <div class="us2-dialog-title">Nice work!</div>
+                <div class="us2-dialog-divider"></div>
+                <div class="us2-dialog-body">All letters placed.</div>
+                <div class="us2-dialog-body" style="margin-bottom:0;">
+                  Pass the phone to <span class="us2-dialog-partner-name">Joakim</span>
+                </div>
+
+                <!-- Partner avatar -->
+                <div class="us2-dialog-avatar p1">J</div>
+
+                <button class="us2-dialog-primary-btn">I'M READY</button>
+                <div class="us2-dialog-hint">
+                  <span class="material-icons-round">lock</span>
+                  Answers hidden until ready
+                </div>
+              </div>
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== ASYNC MODE ==================== -->
+  <div id="async-mode" class="hidden">
+    <div class="steps-row">
+
+      <!-- Async Step 1: Joakim's Turn -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 1 &mdash; Joakim plays</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg">
+
+              <div class="us2-header">
+                <div class="us2-back-btn">
+                  <span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span>
+                </div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge active">
+                    <span class="heart-icon" style="color:#FFF;">&#9829;</span>
+                    You: 45
+                  </div>
+                  <div class="us2-score-badge">
+                    Taija: 38
+                  </div>
+                </div>
+              </div>
+
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer">
+                  <div class="us2-grid-inner">
+                    <div class="us2-crossword-grid">
+                      <!-- Same grid as together step 1 -->
+                      <div class="us2-cell clue"><span class="clue-word">ADORE</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell clue"><span class="clue-word">FEEL</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell clue"><span class="clue-word">HUG</span><span class="arrow down">&blacktriangledown;</span></div>
+                      <div class="us2-cell locked">E</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">A</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">O</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell clue"><span class="clue-word">BODY</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell locked" style="border:2px solid var(--accent-start);box-shadow:0 0 12px rgba(255,107,107,0.6);">R</div>
+                      <div class="us2-cell highlighted"></div>
+                      <div class="us2-cell locked">L</div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell empty-answer"></div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell locked">D</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell clue"><span class="clue-word">LIPS</span><span class="arrow right">&blacktriangleright;</span></div>
+                      <div class="us2-cell locked">K</div>
+                      <div class="us2-cell locked">I</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell locked">S</div>
+                      <div class="us2-cell void"></div>
+                      <div class="us2-cell void"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="us2-rack">
+                <div class="us2-rack-tile">H</div>
+                <div class="us2-rack-tile">E</div>
+                <div class="us2-rack-tile">A</div>
+                <div class="us2-rack-tile">T</div>
+                <div class="us2-rack-tile">S</div>
+              </div>
+
+              <div class="us2-action-bar">
+                <button class="us2-hint-btn">
+                  <span class="material-icons-round">lightbulb</span>
+                  Hint (3)
+                </button>
+                <button class="us2-submit-btn enabled">SUBMIT TURN</button>
+              </div>
+
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">&rarr;</div>
+
+      <!-- Async Step 2: Turn Complete Dialog (existing Us2) -->
+      <div class="step-wrapper">
+        <div class="step-label">Step 2 &mdash; Waiting</div>
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="warm-bg" style="filter: blur(2px) brightness(0.7);">
+              <div class="us2-header">
+                <div class="us2-back-btn"><span style="font-size:14px;color:#FFF;font-weight:bold;">&larr;</span></div>
+                <div class="us2-game-title">CROSSWORD</div>
+                <div class="us2-header-spacer"></div>
+                <div class="us2-score-badges">
+                  <div class="us2-score-badge">You: 45</div>
+                  <div class="us2-score-badge">Taija: 38</div>
+                </div>
+              </div>
+              <div class="us2-grid-frame">
+                <div class="us2-grid-outer"><div class="us2-grid-inner" style="height:200px;"></div></div>
+              </div>
+            </div>
+
+            <!-- Us2 Turn Complete Dialog (async - existing) -->
+            <!-- From turn_complete_dialog.dart Us2 variant -->
+            <div class="dialog-overlay">
+              <div class="us2-dialog-card">
+                <div class="us2-dialog-label">TURN COMPLETE</div>
+                <div class="us2-dialog-title">Nice work!</div>
+                <div class="us2-dialog-divider"></div>
+                <div class="us2-dialog-body">All letters placed.</div>
+                <div class="us2-dialog-body" style="margin-bottom:0;">
+                  Waiting for <span class="us2-dialog-partner-name">Taija</span> to continue.
+                </div>
+                <button class="us2-dialog-primary-btn">LEAVE PUZZLE</button>
+                <div class="us2-dialog-secondary">Stay and view</div>
+              </div>
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchMode(mode) {
+  document.getElementById('together-mode').classList.toggle('hidden', mode !== 'together');
+  document.getElementById('async-mode').classList.toggle('hidden', mode !== 'async');
+  document.getElementById('tab-together').classList.toggle('active', mode === 'together');
+  document.getElementById('tab-async').classList.toggle('active', mode === 'async');
+}
+</script>
+
+<!--
+  IMPLEMENTATION CHECKLIST (linked-turn-flow.html)
+  Compare against Flutter source files for exact values.
+
+  Us2 Header (linked_game_screen.dart:610-676):
+  [x] Back button: 30x30, 8px radius, accent gradient, glow shadow 0.3
+  [x] Title: "CROSSWORD" Playfair 16px w700 letter-spacing 1.5 textDark
+  [x] Score badges: accent gradient pills, 12px radius, 8h/4v padding, 11px w700 white
+  [x] Active badge: heart icon + glow shadow (scoreBadgeShadow)
+  [x] No separate score bar - badges are in header row
+
+  Us2 Grid (linked_game_screen.dart:816-922):
+  [x] Gold frame: gridFrameGradient (goldLight→goldMid→goldDark), 12px radius
+  [x] Gold border: 1.5px goldBorder (#C9A875)
+  [x] Frame shadow: gridFrameShadow (0 6px 20px rgba(0,0,0,0.15))
+  [x] Inner container: goldMid bg, 8px radius
+  [x] Cell spacing: 2px gap
+
+  Cell types (linked_game_screen.dart:1016-1207):
+  [x] Void cells: voidCellGradient (#5D3A3A→#4A2C2A), 4px radius, shadow
+  [x] Clue cells: clueCellGradient (#FFFDF8→#FFF5E6), cellBorder 1px, 4px radius
+  [x] Clue text: Arial w800, textDark, direction arrows ▼/▶
+  [x] Answer empty: answerCellGradient (white→#FFF8F8), dashed border 40% accent
+  [x] Answer locked: answerCellGradient, solid border 40% accent, letterPink (#E91E63)
+  [x] Answer draft: letterTileGradient (tileGoldLight→tileGoldDark), 6px radius, tileText
+  [x] Highlighted: 2px accent border, pulse glow animation
+
+  Rack (linked_game_screen.dart:2017-2229):
+  [x] No label in Us2 (hidden unless dragging)
+  [x] Tiles: letterTileGradient, 8px radius, tileText (#5D4E37), Nunito w800
+  [x] Tile shadows: letterTileShadow (two layers)
+  [x] Tile size: ~0.85 * cellSize (42px in mockup)
+  [x] Empty slot: goldLight 30% bg, goldBorder 50% border, 1.5px
+
+  Action bar (linked_game_screen.dart:2351-2444):
+  [x] Hint button: accent gradient pill, 18px radius, "Hint (N)", lightbulb icon
+  [x] Submit button: salmon gradient (#FF7B6B→#FF9F6B) when enabled, 18px radius
+  [x] Both 8px vertical padding, 13px font, w700/w800
+  [x] Glow shadows when active (glowPink 0.3)
+
+  Turn Complete Dialog - Together Mode (NEW, Us2 styled):
+  [x] Cream bg (#FFF8F0), 24px radius, 300px, 28px padding
+  [x] "TURN COMPLETE" Nunito 11px w700 letter-spacing 2 textLight
+  [x] "Nice work!" Playfair 28px w600 textDark
+  [x] Gradient accent divider 50px 2px
+  [x] "All letters placed." Nunito 15px textMedium
+  [x] "Pass the phone to [partner]" with gradient Playfair italic name
+  [x] Partner avatar circle (gradient matching partner colors)
+  [x] "I'M READY" gradient button, 14px radius, glow shadow
+  [x] Lock icon + "Answers hidden until ready" (Material Icons, not emoji)
+
+  Turn Complete Dialog - Async (from turn_complete_dialog.dart:230-379):
+  [x] Same cream card styling
+  [x] "Waiting for [partner] to continue." with gradient name
+  [x] "LEAVE PUZZLE" gradient button
+  [x] "Stay and view" secondary link, Nunito 14px w500 textLight
+
+  Global checks:
+  [x] Zero emojis - all icons are Material Icons or styled elements
+  [x] Fonts: Playfair Display (headings), Nunito (body)
+  [x] Background: Us2 gradient (#FFD1C1→#FFF5F0)
+  [x] All colors from Us2Theme / us2_theme.dart
+-->
+
+</body>
+</html>

@@ -5,29 +5,47 @@ import '../../config/brand/brand_colors.dart';
 import '../../config/brand/brand_config.dart';
 import '../../config/brand/brand_typography.dart';
 import '../../config/brand/us2_theme.dart';
+import '../together/together_handoff_dialog.dart';
 
 /// Turn complete dialog for Linked game
 ///
 /// Shows a framed modal when player has placed all their letters
 /// and it's now their partner's turn.
 ///
+/// In together mode, shows a handoff dialog instead.
 /// Uses brand colors and typography for easy white-label customization.
 class TurnCompleteDialog extends StatelessWidget {
   final String partnerName;
   final VoidCallback onLeave;
   final VoidCallback onStay;
 
+  /// Whether we're in together mode (single-phone)
+  final bool isTogetherMode;
+
+  /// Callback when partner is ready in together mode
+  final VoidCallback? onTogetherReady;
+
   const TurnCompleteDialog({
     super.key,
     required this.partnerName,
     required this.onLeave,
     required this.onStay,
+    this.isTogetherMode = false,
+    this.onTogetherReady,
   });
 
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   @override
   Widget build(BuildContext context) {
+    // Together mode: show handoff dialog instead
+    if (isTogetherMode && onTogetherReady != null) {
+      return TogetherHandoffDialog(
+        partnerName: partnerName,
+        onReady: onTogetherReady!,
+      );
+    }
+
     if (_isUs2) return _buildUs2Dialog(context);
     return _buildLiiaDialog(context);
   }

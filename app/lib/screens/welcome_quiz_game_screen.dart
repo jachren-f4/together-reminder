@@ -4,18 +4,32 @@ import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
 import '../services/welcome_quiz_service.dart';
+import '../services/play_mode_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../utils/logger.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/together/together_handoff_screen.dart';
 import 'welcome_quiz_waiting_screen.dart';
 import 'welcome_quiz_results_screen.dart';
 
 /// Welcome Quiz game screen.
 /// Shows questions one at a time and submits answers to server.
+///
+/// In together mode (phantom partner), P1 answers then hands off to P2.
 class WelcomeQuizGameScreen extends StatefulWidget {
-  const WelcomeQuizGameScreen({super.key});
+  /// Whether this is the second player's turn in together mode
+  final bool isSecondPlayer;
+
+  /// Phantom user ID to submit on behalf of (together mode)
+  final String? onBehalfOfUserId;
+
+  const WelcomeQuizGameScreen({
+    super.key,
+    this.isSecondPlayer = false,
+    this.onBehalfOfUserId,
+  });
 
   @override
   State<WelcomeQuizGameScreen> createState() => _WelcomeQuizGameScreenState();
@@ -186,7 +200,10 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
     });
 
     try {
-      final result = await _service.submitAnswers(_answers);
+      final result = await _service.submitAnswers(
+        _answers,
+        onBehalfOf: widget.onBehalfOfUserId,
+      );
 
       if (!mounted) return;
 
@@ -209,11 +226,38 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
         );
       } else {
         // Waiting for partner
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const WelcomeQuizWaitingScreen(),
-          ),
-        );
+        final isTogether = PlayModeService().isSinglePhone;
+
+        if (isTogether) {
+          // Together mode: show handoff → P2 plays same quiz
+          final playMode = PlayModeService();
+          final partnerName = playMode.partnerName;
+          final phantomUserId = playMode.phantomUserId;
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TogetherHandoffScreen(
+                partnerName: partnerName,
+                onReady: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => WelcomeQuizGameScreen(
+                        isSecondPlayer: true,
+                        onBehalfOfUserId: phantomUserId,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const WelcomeQuizWaitingScreen(),
+            ),
+          );
+        }
       }
     } catch (e) {
       Logger.error('Failed to submit answers', error: e, service: 'welcome_quiz');

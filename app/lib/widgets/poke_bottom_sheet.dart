@@ -8,6 +8,9 @@ import 'package:togetherremind/theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
+import '../services/play_mode_service.dart';
+import 'together/upgrade_prompt_popup.dart';
+import '../screens/pairing_screen.dart';
 
 class PokeBottomSheet extends StatefulWidget {
   const PokeBottomSheet({super.key});
@@ -126,6 +129,52 @@ class _PokeBottomSheetState extends State<PokeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    // Phantom partner: show upgrade prompt instead of poke UI
+    if (PlayModeService().isPhantomPartner) {
+      final partnerName = PlayModeService().partnerName;
+      return Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Us2Theme.beige,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                UpgradePromptPopup(
+                  icon: Icons.devices,
+                  title: 'Poke $partnerName anytime!',
+                  description:
+                      "Set up $partnerName's phone so you can send pokes, play anytime, and get notifications.",
+                  onSetUpPhone: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PairingScreen(fromSettings: true),
+                      ),
+                    );
+                  },
+                  onDismiss: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     if (_isUs2) return _buildUs2Sheet();
     return _buildLiiaSheet();
   }

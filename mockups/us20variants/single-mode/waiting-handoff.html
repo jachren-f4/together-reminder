@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Waiting vs Handoff Comparison</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #3A3A3A;
+            --text-med: #5A5A5A;
+            --text-light: #707070;
+            --dark-bg: #1A1A2E;
+            --dark-glow: rgba(255,94,98,0.3);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: #F0EBE3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Page title */
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: var(--text-med);
+        }
+
+        /* Tab bar */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.06);
+            padding: 4px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-med);
+            background: transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: white;
+            color: var(--text-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .tab-btn:hover:not(.active) {
+            color: var(--text-dark);
+        }
+
+        /* Phone frames container */
+        .phones-container {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        /* For narrow screens: hide inactive phone */
+        @media (max-width: 860px) {
+            .phones-container {
+                gap: 0;
+            }
+            .phone-wrapper {
+                display: none;
+            }
+            .phone-wrapper.active {
+                display: block;
+            }
+        }
+        /* For wide screens: show both, highlight active */
+        @media (min-width: 861px) {
+            .phone-wrapper {
+                transition: opacity 0.4s ease, transform 0.4s ease;
+            }
+            .phone-wrapper:not(.active) {
+                opacity: 0.45;
+                transform: scale(0.95);
+            }
+            .phone-wrapper.active {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .phone-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .phone-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-med);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.7);
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* ============================= */
+        /* TAB 1: CURRENT ASYNC WAITING  */
+        /* ============================= */
+        .phone-async {
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .async-status-bar {
+            height: 60px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .async-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 32px;
+            text-align: center;
+        }
+
+        /* Partner avatar with breathing animation */
+        .partner-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C9CE9, #45B7D1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(108,156,233,0.3);
+            animation: breathe 3s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 24px rgba(108,156,233,0.3); }
+            50% { transform: scale(1.06); box-shadow: 0 12px 32px rgba(108,156,233,0.4); }
+        }
+
+        .partner-name-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        /* Animated dots */
+        .waiting-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+        .dot-animation {
+            display: inline-flex;
+            gap: 4px;
+            margin-left: 2px;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--pink);
+            border-radius: 50%;
+            animation: dotBounce 1.4s ease-in-out infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* Rotating messages */
+        .rotating-messages {
+            height: 40px;
+            position: relative;
+            margin-bottom: 48px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .rotating-msg {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-med);
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .rotating-msg.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Poke button */
+        .poke-btn {
+            padding: 14px 32px;
+            border: 2px solid var(--pink);
+            border-radius: 16px;
+            background: transparent;
+            color: var(--pink);
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .poke-btn:hover {
+            background: rgba(255,94,98,0.08);
+            transform: translateY(-1px);
+        }
+        .poke-btn:active {
+            transform: scale(0.97);
+        }
+        .poke-btn .material-icons-round {
+            font-size: 18px;
+        }
+
+        .notify-text {
+            font-size: 12px;
+            color: var(--text-light);
+            max-width: 220px;
+            line-height: 1.4;
+        }
+
+
+        /* =============================== */
+        /* TAB 2: TOGETHER MODE HANDOFF    */
+        /* (Us2 cream styling)             */
+        /* =============================== */
+        .phone-together {
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sparkle particles - adjusted for light background */
+        .sparkles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255,107,107,0.4);
+            border-radius: 50%;
+            animation: sparkleFloat linear infinite;
+        }
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100%) scale(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(80%) scale(1);
+            }
+            90% {
+                opacity: 0.6;
+                transform: translateY(-10%) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20%) scale(0);
+            }
+        }
+
+        /* Lock indicator - Us2 style */
+        .lock-indicator {
+            position: absolute;
+            top: 60px;
+            left: 24px;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 2;
+        }
+        .lock-indicator .material-icons-round {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+        .lock-indicator span {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+        }
+
+        .together-status-bar {
+            height: 60px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .together-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 32px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        /* "TURN COMPLETE" label */
+        .handoff-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        /* Large avatar with warm glow */
+        .handoff-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C9CE9, #45B7D1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 24px;
+            box-shadow:
+                0 8px 24px rgba(108,156,233,0.25),
+                0 0 40px rgba(255,107,107,0.1);
+            animation: glowPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow:
+                    0 8px 24px rgba(108,156,233,0.25),
+                    0 0 40px rgba(255,107,107,0.1);
+            }
+            50% {
+                box-shadow:
+                    0 12px 32px rgba(108,156,233,0.35),
+                    0 0 60px rgba(255,107,107,0.15);
+            }
+        }
+
+        /* "Nice work!" title - Playfair Display */
+        .handoff-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        /* Gradient accent divider */
+        .handoff-divider {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+            border-radius: 1px;
+            margin: 12px 0 16px 0;
+        }
+
+        .handoff-subtitle {
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            color: var(--text-med);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Partner name in italic with gradient */
+        .handoff-partner-name {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .handoff-instruction {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        /* I'M READY button - Us2 gradient */
+        .ready-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+            box-shadow:
+                0 6px 20px rgba(255,107,107,0.25);
+            animation: readyPulseGlow 2s ease-in-out infinite;
+        }
+        @keyframes readyPulseGlow {
+            0%, 100% {
+                box-shadow:
+                    0 6px 20px rgba(255,107,107,0.25);
+            }
+            50% {
+                box-shadow:
+                    0 8px 28px rgba(255,107,107,0.4);
+            }
+        }
+        .ready-btn:hover {
+            transform: translateY(-2px);
+        }
+        .ready-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Secondary link */
+        .handoff-secondary {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 16px;
+            text-decoration: none;
+        }
+        .handoff-secondary:hover {
+            color: var(--text-med);
+        }
+
+        /* Shine sweep on button */
+        .ready-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -100%;
+            width: 60%;
+            height: 200%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transform: skewX(-20deg);
+            animation: shineSweep 3s ease-in-out infinite;
+        }
+        @keyframes shineSweep {
+            0%, 100% { left: -100%; }
+            50% { left: 150%; }
+        }
+
+        /* Ambient glow behind content - warm for cream bg */
+        .ambient-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,107,107,0.08) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            pointer-events: none;
+            animation: ambientDrift 6s ease-in-out infinite;
+        }
+        @keyframes ambientDrift {
+            0%, 100% { transform: translate(-50%, -60%) scale(1); }
+            50% { transform: translate(-50%, -58%) scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Waiting Screen Comparison</h1>
+        <p>Current async waiting vs. together-mode handoff</p>
+    </div>
+
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="async" onclick="switchTab('async')">Current (Async)</button>
+        <button class="tab-btn" data-tab="together" onclick="switchTab('together')">Together Mode (New)</button>
+    </div>
+
+    <div class="phones-container">
+        <!-- Phone 1: Current Async Waiting -->
+        <div class="phone-wrapper active" id="wrapper-async">
+            <div class="phone-label">Current</div>
+            <div class="phone phone-async">
+                <div class="async-status-bar"></div>
+                <div class="async-content">
+                    <div class="partner-avatar">T</div>
+                    <div class="partner-name-text">Taija</div>
+                    <div class="waiting-text">
+                        Waiting for Taija
+                        <span class="dot-animation">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </div>
+                    <div class="rotating-messages">
+                        <div class="rotating-msg active" data-index="0">Your partner is on their way...</div>
+                        <div class="rotating-msg" data-index="1">Almost there!</div>
+                        <div class="rotating-msg" data-index="2">Good things come to those who wait</div>
+                    </div>
+                    <button class="poke-btn">Poke Taija <span class="material-icons-round">waving_hand</span></button>
+                    <div class="notify-text">We'll notify you when results are ready</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone 2: Together Mode Handoff (Us2 Cream Style) -->
+        <div class="phone-wrapper" id="wrapper-together">
+            <div class="phone-label">New</div>
+            <div class="phone phone-together">
+                <div class="sparkles-container" id="sparklesContainer"></div>
+                <div class="ambient-glow"></div>
+                <div class="lock-indicator"><span class="material-icons-round">lock</span> <span>Back disabled</span></div>
+                <div class="together-status-bar"></div>
+                <div class="together-content">
+                    <div class="handoff-label">TURN COMPLETE</div>
+                    <div class="handoff-avatar">T</div>
+                    <div class="handoff-title">Nice work!</div>
+                    <div class="handoff-divider"></div>
+                    <div class="handoff-subtitle">Time to hand over the phone to</div>
+                    <div class="handoff-partner-name">Taija</div>
+                    <div class="handoff-instruction">Hand over the phone...</div>
+                    <button class="ready-btn">I'M READY</button>
+                    <button class="handoff-secondary">Go back to home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // Tab switching
+        // ========================
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+
+            // Update phone wrappers
+            document.querySelectorAll('.phone-wrapper').forEach(wrapper => {
+                const id = wrapper.id.replace('wrapper-', '');
+                wrapper.classList.toggle('active', id === tab);
+            });
+        }
+
+        // ========================
+        // Rotating messages (async screen)
+        // ========================
+        const messages = document.querySelectorAll('.rotating-msg');
+        let currentMsg = 0;
+
+        setInterval(() => {
+            messages[currentMsg].classList.remove('active');
+            currentMsg = (currentMsg + 1) % messages.length;
+            messages[currentMsg].classList.add('active');
+        }, 3000);
+
+        // ========================
+        // Poke button interaction
+        // ========================
+        const pokeBtn = document.querySelector('.poke-btn');
+        pokeBtn.addEventListener('click', () => {
+            pokeBtn.innerHTML = 'Poked!';
+            pokeBtn.style.background = 'rgba(255,94,98,0.08)';
+            pokeBtn.style.borderColor = 'var(--grad-end)';
+            setTimeout(() => {
+                pokeBtn.innerHTML = 'Poke Taija <span class="material-icons-round">waving_hand</span>';
+                pokeBtn.style.background = 'transparent';
+                pokeBtn.style.borderColor = 'var(--pink)';
+            }, 2000);
+        });
+
+        // ========================
+        // Sparkle particles (together screen)
+        // ========================
+        const sparklesContainer = document.getElementById('sparklesContainer');
+        const sparkleCount = 25;
+
+        for (let i = 0; i < sparkleCount; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.width = (2 + Math.random() * 3) + 'px';
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.animationDuration = (4 + Math.random() * 6) + 's';
+            sparkle.style.animationDelay = (Math.random() * 5) + 's';
+            sparkle.style.opacity = 0.3 + Math.random() * 0.5;
+            sparklesContainer.appendChild(sparkle);
+        }
+
+        // ========================
+        // I'M READY button interaction
+        // ========================
+        const readyBtn = document.querySelector('.ready-btn');
+        readyBtn.addEventListener('click', () => {
+            readyBtn.textContent = 'Let\'s go!';
+            readyBtn.style.animation = 'none';
+            readyBtn.style.boxShadow = '0 8px 28px rgba(255,107,107,0.4)';
+            readyBtn.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                readyBtn.textContent = "I'M READY";
+                readyBtn.style.animation = '';
+                readyBtn.style.boxShadow = '';
+                readyBtn.style.transform = '';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

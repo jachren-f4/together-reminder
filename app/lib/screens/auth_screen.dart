@@ -12,7 +12,7 @@ import '../services/app_bootstrap_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
 import 'otp_verification_screen.dart';
-import 'onboarding/anniversary_screen.dart';
+import 'partner_name_entry_screen.dart';
 import 'main_screen.dart';
 
 /// Authentication screen for sign up / sign in with newspaper styling
@@ -156,9 +156,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (!mounted) return;
 
-      // New user - go to anniversary screen (then pairing)
+      // New user - go to partner name entry (single-phone mode)
+      // Flow: PartnerNameEntry → AnniversaryScreen → WelcomeQuiz
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const AnniversaryScreen()),
+        MaterialPageRoute(builder: (context) => const PartnerNameEntryScreen()),
         (route) => false,
       );
     } else {

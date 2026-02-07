@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Upgrade to Two Devices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --text-dark: #2D2D2D;
+            --text-med: #6B6B6B;
+            --text-light: #9B9B9B;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; flex-direction: column;
+            transition: opacity 0.4s, transform 0.4s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* === SCREEN 1: UPGRADE PITCH === */
+        .pitch {
+            background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+            padding: 60px 24px 32px;
+        }
+        .back-btn {
+            font-size: 14px; color: var(--text-med);
+            text-decoration: none; display: flex; align-items: center; gap: 6px;
+            margin-bottom: 32px; cursor: pointer;
+            background: none; border: none; font-family: inherit;
+        }
+        .pitch-hero {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .hero-phones {
+            font-size: 64px;
+            margin-bottom: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .hero-phones::after {
+            content: '✨';
+            position: absolute;
+            top: -8px;
+            right: -16px;
+            font-size: 24px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        .pitch-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px; font-weight: 600; color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .pitch-sub {
+            font-size: 14px; color: var(--text-med); line-height: 1.5;
+        }
+
+        /* Benefits */
+        .benefits {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .benefit {
+            display: flex; gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .benefit:last-child { border-bottom: none; }
+        .benefit-icon {
+            width: 48px; height: 48px;
+            background: white;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            flex-shrink: 0;
+        }
+        .benefit-text { flex: 1; }
+        .benefit-title {
+            font-size: 15px; font-weight: 700; color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+        .benefit-desc {
+            font-size: 12px; color: var(--text-med); line-height: 1.4;
+        }
+
+        .pitch-bottom { padding: 16px 24px 40px; }
+        .setup-btn {
+            width: 100%; padding: 18px; border: none; border-radius: 16px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 700;
+            color: white; cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            transition: all 0.2s;
+        }
+        .setup-btn:hover { transform: translateY(-2px); }
+        .later-link {
+            display: block; text-align: center; margin-top: 14px;
+            font-size: 13px; color: var(--text-light); cursor: pointer;
+            background: none; border: none; font-family: inherit;
+        }
+
+        /* === SCREEN 2: PAIRING CODE === */
+        .code-screen {
+            background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+            padding: 60px 24px 32px;
+            align-items: center;
+        }
+        .code-back {
+            align-self: flex-start;
+            font-size: 14px; color: var(--text-med);
+            cursor: pointer; margin-bottom: 24px;
+            background: none; border: none; font-family: inherit;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .code-icon { font-size: 56px; margin-bottom: 20px; }
+        .code-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px; font-weight: 600; color: var(--text-dark);
+            margin-bottom: 8px; text-align: center;
+        }
+        .code-sub {
+            font-size: 14px; color: var(--text-med); text-align: center;
+            margin-bottom: 32px; line-height: 1.5; max-width: 300px;
+        }
+        .code-card {
+            background: white; border-radius: 24px; padding: 28px 32px;
+            box-shadow: 0 8px 30px rgba(255,107,107,0.12);
+            text-align: center; width: 100%; margin-bottom: 24px;
+        }
+        .code-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            color: var(--text-light); text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .code-display {
+            font-size: 48px; font-weight: 800; letter-spacing: 10px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        .code-copy {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 10px;
+            background: rgba(255,94,98,0.08); border: none;
+            font-family: 'Nunito', sans-serif; font-size: 13px;
+            font-weight: 600; color: var(--pink); cursor: pointer;
+        }
+        .steps-list {
+            width: 100%; text-align: left;
+        }
+        .step-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 12px 0;
+        }
+        .step-num {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 13px; font-weight: 800;
+            color: white; flex-shrink: 0;
+        }
+        .step-text {
+            font-size: 14px; color: var(--text-dark); line-height: 1.5;
+            padding-top: 3px;
+        }
+        .step-text strong { color: var(--pink); }
+
+        .share-btn {
+            width: 100%; padding: 18px; border: none; border-radius: 16px;
+            background: white; border: 2px solid rgba(0,0,0,0.06);
+            font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700;
+            color: var(--text-dark); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s;
+            margin-top: auto;
+        }
+        .share-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+        .keep-note {
+            text-align: center; padding: 16px;
+            font-size: 12px; color: var(--text-light);
+        }
+
+        /* Tab indicator */
+        .tab-bar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 100;
+            background: rgba(0,0,0,0.6); padding: 6px; border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .tab-btn {
+            padding: 6px 14px; border: none; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 600;
+            cursor: pointer; color: white; background: transparent; transition: all 0.2s;
+        }
+        .tab-btn.active { background: var(--pink); }
+    </style>
+</head>
+<body>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="show(1)">Upgrade Pitch</button>
+        <button class="tab-btn" onclick="show(2)">Pairing Code</button>
+    </div>
+
+    <div class="phone">
+        <!-- SCREEN 1: UPGRADE PITCH -->
+        <div class="screen pitch active" id="s1">
+            <button class="back-btn" onclick="window.location='home-screen.html'">← Back</button>
+            <div class="pitch-hero">
+                <div class="hero-phones">📱📱</div>
+                <div class="pitch-title">Play on Two Phones</div>
+                <div class="pitch-sub">Give your partner their own device so you can play anytime, anywhere.</div>
+            </div>
+            <div class="benefits">
+                <div class="benefit">
+                    <div class="benefit-icon">🏃</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Steps Together</div>
+                        <div class="benefit-desc">Track both your steps and compete to reach daily goals together.</div>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">⏰</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Play Anytime</div>
+                        <div class="benefit-desc">Answer quizzes on your own time. No need to be in the same room.</div>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">👋</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Poke & Remind</div>
+                        <div class="benefit-desc">Send fun emoji pokes when your partner hasn't played yet.</div>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">🔔</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Notifications</div>
+                        <div class="benefit-desc">Get notified when results are ready or when your partner pokes you.</div>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Keep All Progress</div>
+                        <div class="benefit-desc">Your LP, unlocks, and game history carry over. Nothing is lost.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="pitch-bottom">
+                <button class="setup-btn" onclick="show(2)">Set Up Partner's Phone</button>
+                <button class="later-link" onclick="window.location='home-screen.html'">Maybe later</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: PAIRING CODE -->
+        <div class="screen code-screen" id="s2">
+            <button class="code-back" onclick="show(1)">← Back</button>
+            <div class="code-icon">🔗</div>
+            <div class="code-title">Your Pairing Code</div>
+            <div class="code-sub">Ask Taija to download Us 2.0 and enter this code to connect.</div>
+
+            <div class="code-card">
+                <div class="code-label">SHARE THIS CODE WITH TAIJA</div>
+                <div class="code-display">X7K9M2</div>
+                <button class="code-copy" onclick="copyCode()">
+                    <span id="copyText">📋 Copy Code</span>
+                </button>
+            </div>
+
+            <div class="steps-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-text">Taija downloads <strong>Us 2.0</strong> from the Play Store</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-text">She signs up with her email</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-text">She enters the code <strong>X7K9M2</strong></div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">4</div>
+                    <div class="step-text">All your progress syncs automatically! 🎉</div>
+                </div>
+            </div>
+
+            <button class="share-btn" onclick="shareCode()">
+                <span>📤</span> Share Code with Taija
+            </button>
+            <div class="keep-note">You can keep playing on one phone while waiting for Taija to set up.</div>
+        </div>
+    </div>
+
+    <script>
+        function show(n) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn')[n - 1].classList.add('active');
+        }
+
+        function copyCode() {
+            const el = document.getElementById('copyText');
+            el.textContent = '✅ Copied!';
+            setTimeout(() => el.textContent = '📋 Copy Code', 2000);
+        }
+
+        function shareCode() {
+            // Simulate share
+            const btn = event.target.closest('.share-btn');
+            btn.innerHTML = '<span>✅</span> Share sheet would open';
+            setTimeout(() => {
+                btn.innerHTML = '<span>📤</span> Share Code with Taija';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

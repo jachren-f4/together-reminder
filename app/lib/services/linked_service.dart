@@ -188,18 +188,26 @@ class LinkedService extends SideQuestServiceBase {
   }
 
   /// Submit turn with placements
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<LinkedTurnResult> submitTurn(
     String matchId,
-    List<LinkedDraftPlacement> placements,
-  ) async {
+    List<LinkedDraftPlacement> placements, {
+    String? onBehalfOf,
+  }) async {
     try {
+      final body = <String, dynamic>{
+        'matchId': matchId,
+        'placements': placements.map((p) => p.toJson()).toList(),
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await apiRequest(
         'POST',
         '/api/sync/linked/submit',
-        body: {
-          'matchId': matchId,
-          'placements': placements.map((p) => p.toJson()).toList(),
-        },
+        body: body,
       );
 
       return LinkedTurnResult.fromJson(response);

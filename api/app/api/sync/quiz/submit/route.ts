@@ -9,6 +9,7 @@ import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, LP_BONUSES } from '@/lib/lp/config';
 import { recordActivityPlay, getCooldownStatus, type ActivityType } from '@/lib/magnets';
+import { validateOnBehalfOf } from '@/lib/phantom/on-behalf-of';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,7 @@ export const dynamic = 'force-dynamic';
  *   sessionId: string - the quiz session ID
  *   answers: number[] - array of answer indices
  *   predictions?: number[] - for Would You Rather format
+ *   onBehalfOf?: string - phantom user ID for single-phone mode
  * }
  */
 export const POST = withAuthOrDevBypass(async (req, userId, email) => {
@@ -28,7 +30,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
   try {
     const body = await req.json();
-    const { sessionId, answers, predictions } = body;
+    const { sessionId, answers, predictions, onBehalfOf } = body;
 
     // Validate required fields
     if (!sessionId || !answers || !Array.isArray(answers)) {
@@ -37,6 +39,16 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         { status: 400 }
       );
     }
+
+    // Resolve effective user ID (supports single-phone mode via onBehalfOf)
+    const onBehalfOfResult = await validateOnBehalfOf(userId, onBehalfOf);
+    if (!onBehalfOfResult.valid) {
+      return NextResponse.json(
+        { error: onBehalfOfResult.error },
+        { status: 403 }
+      );
+    }
+    const effectiveUserId = onBehalfOfResult.effectiveUserId;
 
     await client.query('BEGIN');
 
@@ -88,7 +100,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       ? JSON.parse(session.answers)
       : session.answers || {};
 
-    if (!existingAnswersForCooldownCheck[userId]) {
+    if (!existingAnswersForCooldownCheck[effectiveUserId]) {
       const cooldownActivityType: ActivityType = session.format_type === 'affirmation'
         ? 'affirmation_quiz'
         : 'classic_quiz';
@@ -113,7 +125,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       ? JSON.parse(session.answers)
       : session.answers || {};
 
-    if (existingAnswers[userId]) {
+    if (existingAnswers[effectiveUserId]) {
       await client.query('ROLLBACK');
       return NextResponse.json(
         { error: 'You have already answered this quiz', code: 'ALREADY_ANSWERED' },
@@ -122,7 +134,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     }
 
     // Update answers
-    existingAnswers[userId] = answers;
+    existingAnswers[effectiveUserId] = answers;
 
     // Handle predictions for Would You Rather
     let existingPredictions = typeof session.predictions === 'string'
@@ -130,7 +142,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       : session.predictions || {};
 
     if (predictions && Array.isArray(predictions)) {
-      existingPredictions[userId] = predictions;
+      existingPredictions[effectiveUserId] = predictions;
     }
 
     // Check if both users have answered

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Settings & Profile (Single Mode)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #3A3A3A;
+            --text-med: #5A5A5A;
+            --text-light: #707070;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: #F0E6E0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 24px;
+        }
+
+        /* Tab bar outside phone */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 14px;
+            padding: 4px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .tab {
+            padding: 10px 32px;
+            border-radius: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-med);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+        .tab:hover:not(.active) {
+            background: rgba(255,94,98,0.08);
+        }
+
+        /* Phone frame */
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* Scenes */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .scene.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ============================================
+           SETTINGS SCREEN
+           ============================================ */
+        .settings-screen {
+            height: 100%;
+            overflow-y: auto;
+            padding-top: 54px;
+        }
+        .settings-screen::-webkit-scrollbar { display: none; }
+
+        .screen-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            padding: 16px 24px 20px;
+        }
+
+        .settings-content {
+            padding: 0 20px 120px;
+        }
+
+        .section-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 4px;
+            margin-bottom: 8px;
+            margin-top: 24px;
+        }
+        .section-label:first-child {
+            margin-top: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .row:last-child {
+            border-bottom: none;
+        }
+        .row-icon {
+            font-size: 20px;
+            margin-right: 14px;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .row-icon .material-icons-round {
+            color: var(--text-med);
+        }
+        .row-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .row-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .row-subtitle {
+            font-size: 12px;
+            color: var(--text-med);
+            margin-top: 2px;
+        }
+        .row-value {
+            font-size: 14px;
+            color: var(--text-med);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .row-chevron {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Toggle */
+        .toggle {
+            width: 48px;
+            height: 28px;
+            border-radius: 14px;
+            background: var(--beige);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle.on {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+        }
+        .toggle-knob {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .toggle.on .toggle-knob {
+            transform: translateX(20px);
+        }
+
+        /* Two-device highlight card */
+        .two-device-card {
+            border-left: 3px solid var(--pink);
+        }
+        .new-badge {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+        .info-text {
+            font-size: 12px;
+            color: var(--text-light);
+            padding: 8px 4px 0;
+            line-height: 1.4;
+        }
+
+        /* ============================================
+           PROFILE SCREEN
+           ============================================ */
+        .profile-screen {
+            height: 100%;
+            overflow-y: auto;
+            padding-top: 54px;
+        }
+        .profile-screen::-webkit-scrollbar { display: none; }
+
+        /* Profile header section */
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 24px 24px;
+        }
+
+        .avatars-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .avatar-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .avatar-circle.user {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+        }
+        .avatar-circle.partner {
+            background: linear-gradient(135deg, #6C9CE9, #45B7D1);
+        }
+        .avatar-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .heart-icon {
+            font-size: 28px;
+            animation: heartPulse 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+        }
+        .heart-icon .material-icons-round {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .couple-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .couple-since {
+            font-size: 14px;
+            color: var(--text-med);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            margin: 20px 20px 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .stat-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 8px;
+            gap: 4px;
+        }
+        .stat-item + .stat-item {
+            border-left: 1px solid rgba(0,0,0,0.04);
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Profile cards */
+        .profile-cards {
+            padding: 20px 20px 120px;
+        }
+        .profile-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            padding: 18px 20px 4px;
+        }
+        .stat-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-top: 1px solid rgba(0,0,0,0.04);
+        }
+        .stat-row:first-of-type {
+            border-top: none;
+        }
+        .stat-row-icon {
+            font-size: 18px;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-row-icon .material-icons-round {
+            color: var(--text-med);
+        }
+        .stat-row-label {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        .stat-row-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Upgrade nudge card on profile */
+        .upgrade-nudge {
+            margin-top: 16px;
+            border-left: 3px solid var(--pink);
+        }
+        .upgrade-nudge .row {
+            padding: 18px 20px;
+        }
+
+        /* Bottom nav placeholder */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(0,0,0,0.04);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-around;
+            padding-top: 10px;
+            z-index: 5;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .nav-icon {
+            font-size: 22px;
+            opacity: 0.4;
+            display: flex;
+            align-items: center;
+        }
+        .nav-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+        .nav-item.active .nav-label {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Premium check icon */
+        .premium-check {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+        }
+        .premium-check .material-icons-round {
+            font-size: 16px;
+            color: #22C55E;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tab bar -->
+    <div class="tab-bar">
+        <button class="tab active" data-tab="settings">Settings</button>
+        <button class="tab" data-tab="profile">Profile</button>
+    </div>
+
+    <!-- Phone frame -->
+    <div class="phone">
+
+        <!-- ===== Settings Screen ===== -->
+        <div class="scene active" id="scene-settings">
+            <div class="settings-screen">
+                <div class="screen-title">Settings</div>
+                <div class="settings-content">
+
+                    <!-- Game Settings -->
+                    <div class="section-label">Game Settings</div>
+                    <div class="card">
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">track_changes</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Who goes first</div>
+                            </div>
+                            <span class="row-value">Joakim</span>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">volume_up</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Sound effects</div>
+                            </div>
+                            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                        </div>
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">vibration</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Haptics</div>
+                            </div>
+                            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Two-Device Mode (before pairing) -->
+                    <div class="section-label">Two-Device Mode</div>
+                    <div class="card two-device-card">
+                        <div class="row" style="cursor: pointer;">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">devices</span></span>
+                            <div class="row-content">
+                                <div class="row-title">
+                                    Set up Taija's phone
+                                    <span class="new-badge">New</span>
+                                </div>
+                                <div class="row-subtitle">Play anytime, send pokes, track steps</div>
+                            </div>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+                    <div class="info-text">Your progress and history will sync to Taija's device</div>
+
+                    <!-- Play Mode (only visible AFTER both devices are paired) -->
+                    <div class="section-label" style="margin-top: 32px; position: relative;">
+                        Play Mode
+                        <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; background: rgba(34,197,94,0.1); color: #22C55E; text-transform: uppercase; margin-left: 8px; vertical-align: middle;">After pairing</span>
+                    </div>
+                    <div class="card">
+                        <div class="row" style="cursor: pointer;">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">smartphone</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Play mode</div>
+                                <div class="row-subtitle">How you and Taija play games</div>
+                            </div>
+                            <span class="row-value">Separate phones</span>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+                    <div class="info-text">Choose "Same phone" to pass the phone between turns, or "Separate phones" to play on your own time. Only available after pairing both devices.</div>
+
+                    <!-- Account -->
+                    <div class="section-label">Account</div>
+                    <div class="card">
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">email</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Email</div>
+                            </div>
+                            <span style="font-size: 13px; color: var(--text-light);">joakim@example.com</span>
+                        </div>
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">star</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Subscription</div>
+                            </div>
+                            <span style="font-size: 13px; color: #22C55E; font-weight: 700;">Premium <span class="premium-check"><span class="material-icons-round">check_circle</span></span></span>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <div class="section-label">About</div>
+                    <div class="card">
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">info</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Version</div>
+                            </div>
+                            <span style="font-size: 13px; color: var(--text-light);">2.1.0</span>
+                        </div>
+                        <div class="row">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">chat_bubble</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Help & Feedback</div>
+                            </div>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Bottom nav for Settings -->
+            <div class="bottom-nav">
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">home</span></span>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">menu_book</span></span>
+                    <span class="nav-label">Journal</span>
+                </div>
+                <div class="nav-item active">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">settings</span></span>
+                    <span class="nav-label">Settings</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">person</span></span>
+                    <span class="nav-label">Profile</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Profile Screen ===== -->
+        <div class="scene" id="scene-profile">
+            <div class="profile-screen">
+                <!-- Profile header with avatars -->
+                <div class="profile-header">
+                    <div class="avatars-row">
+                        <div class="avatar-wrapper">
+                            <div class="avatar-circle user">J</div>
+                            <span class="avatar-name">Joakim</span>
+                        </div>
+                        <span class="heart-icon"><span class="material-icons-round">favorite</span></span>
+                        <div class="avatar-wrapper">
+                            <div class="avatar-circle partner">T</div>
+                            <span class="avatar-name">Taija</span>
+                        </div>
+                    </div>
+                    <div class="couple-name">Joakim & Taija</div>
+                    <div class="couple-since">Together since Feb 2025</div>
+                </div>
+
+                <!-- Stats row -->
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">Day 1</div>
+                        <div class="stat-label">Together</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">120 LP</div>
+                        <div class="stat-label">Love Points</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Games Played</div>
+                    </div>
+                </div>
+
+                <!-- Profile cards -->
+                <div class="profile-cards">
+                    <!-- Relationship Stats -->
+                    <div class="card" style="margin-top: 0;">
+                        <div class="profile-card-title">Relationship Stats</div>
+                        <div class="stat-row">
+                            <span class="stat-row-icon"><span class="material-icons-round" style="font-size:18px;">edit_note</span></span>
+                            <span class="stat-row-label">Quizzes completed</span>
+                            <span class="stat-row-value">3</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-row-icon"><span class="material-icons-round" style="font-size:18px;">track_changes</span></span>
+                            <span class="stat-row-label">Match rate</span>
+                            <span class="stat-row-value">72%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-row-icon"><span class="material-icons-round" style="font-size:18px;">waving_hand</span></span>
+                            <span class="stat-row-label">You or Me played</span>
+                            <span class="stat-row-value">2</span>
+                        </div>
+                    </div>
+
+                    <!-- Upgrade nudge card -->
+                    <div class="card upgrade-nudge">
+                        <div class="row" style="cursor: pointer;">
+                            <span class="row-icon"><span class="material-icons-round" style="font-size:20px;">devices</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Set up Taija's phone</div>
+                                <div class="row-subtitle">Play anytime, send pokes, track steps</div>
+                            </div>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom nav for Profile -->
+            <div class="bottom-nav">
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">home</span></span>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">menu_book</span></span>
+                    <span class="nav-label">Journal</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">settings</span></span>
+                    <span class="nav-label">Settings</span>
+                </div>
+                <div class="nav-item active">
+                    <span class="nav-icon"><span class="material-icons-round" style="font-size:22px;">person</span></span>
+                    <span class="nav-label">Profile</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const scenes = {
+            settings: document.getElementById('scene-settings'),
+            profile: document.getElementById('scene-profile')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                // Update tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Switch scenes with fade
+                Object.values(scenes).forEach(s => s.classList.remove('active'));
+                setTimeout(() => {
+                    scenes[target].classList.add('active');
+                }, 50);
+            });
+        });
+    </script>
+</body>
+</html>

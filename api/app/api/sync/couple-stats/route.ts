@@ -37,8 +37,9 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
         const user1Id = couple.user1_id;
         const user2Id = couple.user2_id;
 
-        // 2. Get activities completed per user (from quest_completions)
-        const activitiesResult = await query(
+        // 2. Get activities completed per user (from quest_completions + game matches)
+        // Count daily quest completions
+        const questResult = await query(
             `SELECT
                 user_id,
                 COUNT(*) as count
@@ -50,8 +51,36 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
         );
 
         const activitiesByUser: Record<string, number> = {};
-        for (const row of activitiesResult.rows) {
+        for (const row of questResult.rows) {
             activitiesByUser[row.user_id] = parseInt(row.count);
+        }
+
+        // Count completed Linked (crossword) matches - both players get credit
+        const linkedResult = await query(
+            `SELECT player1_id, player2_id, COUNT(*) as count
+             FROM linked_matches
+             WHERE couple_id = $1 AND status = 'completed'
+             GROUP BY player1_id, player2_id`,
+            [coupleId]
+        );
+        for (const row of linkedResult.rows) {
+            const count = parseInt(row.count);
+            activitiesByUser[row.player1_id] = (activitiesByUser[row.player1_id] || 0) + count;
+            activitiesByUser[row.player2_id] = (activitiesByUser[row.player2_id] || 0) + count;
+        }
+
+        // Count completed Word Search matches - both players get credit
+        const wordSearchResult = await query(
+            `SELECT player1_id, player2_id, COUNT(*) as count
+             FROM word_search_matches
+             WHERE couple_id = $1 AND status = 'completed'
+             GROUP BY player1_id, player2_id`,
+            [coupleId]
+        );
+        for (const row of wordSearchResult.rows) {
+            const count = parseInt(row.count);
+            activitiesByUser[row.player1_id] = (activitiesByUser[row.player1_id] || 0) + count;
+            activitiesByUser[row.player2_id] = (activitiesByUser[row.player2_id] || 0) + count;
         }
 
         // 3. Get current streak per user

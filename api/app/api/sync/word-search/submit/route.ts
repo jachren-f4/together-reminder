@@ -11,6 +11,7 @@ import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { recordActivityPlay } from '@/lib/magnets';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { validateOnBehalfOf } from '@/lib/phantom/on-behalf-of';
 
 export const dynamic = 'force-dynamic';
 
@@ -107,7 +108,8 @@ function validateWordPositions(
  * Body: {
  *   matchId: string,
  *   word: string,
- *   positions: Array<{ row: number, col: number }>
+ *   positions: Array<{ row: number, col: number }>,
+ *   onBehalfOf?: string - phantom user ID for single-phone mode
  * }
  */
 export const POST = withAuthOrDevBypass(async (req, userId, email) => {
@@ -115,7 +117,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
   try {
     const body = await req.json();
-    const { matchId, word, positions } = body;
+    const { matchId, word, positions, onBehalfOf } = body;
 
     if (!matchId || !word || !positions || !Array.isArray(positions)) {
       return NextResponse.json(
@@ -123,6 +125,16 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         { status: 400 }
       );
     }
+
+    // Resolve effective user ID (supports single-phone mode via onBehalfOf)
+    const onBehalfOfResult = await validateOnBehalfOf(userId, onBehalfOf);
+    if (!onBehalfOfResult.valid) {
+      return NextResponse.json(
+        { error: onBehalfOfResult.error },
+        { status: 403 }
+      );
+    }
+    const effectiveUserId = onBehalfOfResult.effectiveUserId;
 
     await client.query('BEGIN');
 
@@ -141,7 +153,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     }
 
     const { id: coupleId, user1_id, user2_id } = coupleResult.rows[0];
-    const isPlayer1 = userId === user1_id;
+    const isPlayer1 = effectiveUserId === user1_id;
 
     // Lock match for update
     const matchResult = await client.query(
@@ -159,8 +171,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     const match = matchResult.rows[0];
 
-    // Validate it's the player's turn
-    if (match.current_turn_user_id !== userId) {
+    // Validate it's the player's turn (use effectiveUserId for single-phone mode)
+    if (match.current_turn_user_id !== effectiveUserId) {
       await client.query('ROLLBACK');
       return NextResponse.json(
         { error: 'NOT_YOUR_TURN', message: "It's not your turn" },
@@ -231,7 +243,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     foundWords.push({
       word: upperWord,
-      foundBy: userId,
+      foundBy: effectiveUserId,
       turnNumber: match.turn_number,
       positions: positions,
       colorIndex: colorIndex
@@ -313,7 +325,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     // Switch turns if turn complete and game not over
     const nextTurnUserId = turnComplete && !gameComplete
-      ? (userId === user1_id ? user2_id : user1_id)
+      ? (effectiveUserId === user1_id ? user2_id : user1_id)
       : match.current_turn_user_id;
 
     const nextWordsFoundThisTurn = turnComplete ? 0 : newWordsFoundThisTurn;
@@ -356,7 +368,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     await client.query(
       `INSERT INTO word_search_moves (match_id, player_id, word, positions, turn_number)
        VALUES ($1, $2, $3, $4, $5)`,
-      [matchId, userId, upperWord, JSON.stringify(positions), match.turn_number]
+      [matchId, effectiveUserId, upperWord, JSON.stringify(positions), match.turn_number]
     );
 
     await client.query('COMMIT');

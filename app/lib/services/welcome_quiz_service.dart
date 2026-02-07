@@ -206,14 +206,21 @@ class WelcomeQuizService {
   }
 
   /// Submit quiz answers
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<WelcomeQuizSubmitResult?> submitAnswers(
-      List<WelcomeQuizAnswer> answers) async {
+      List<WelcomeQuizAnswer> answers, {String? onBehalfOf}) async {
     try {
+      final body = <String, dynamic>{
+        'answers': answers.map((a) => a.toJson()).toList(),
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await _apiClient.post<WelcomeQuizSubmitResult>(
         '/api/welcome-quiz/submit',
-        body: {
-          'answers': answers.map((a) => a.toJson()).toList(),
-        },
+        body: body,
         parser: (json) => WelcomeQuizSubmitResult.fromJson(json),
       );
 

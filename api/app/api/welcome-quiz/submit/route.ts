@@ -19,6 +19,7 @@ import { NextResponse } from 'next/server';
 import { getCoupleBasic } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
 import { awardLP } from '@/lib/lp/award';
+import { validateOnBehalfOf } from '@/lib/phantom/on-behalf-of';
 
 // Welcome quiz questions - must match route.ts
 const WELCOME_QUIZ_QUESTIONS = [
@@ -83,13 +84,23 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
     console.log('[welcome-quiz/submit] Starting submit for userId:', userId);
 
     const body = await req.json();
-    const { answers } = body as { answers: Answer[] };
+    const { answers, onBehalfOf } = body as { answers: Answer[]; onBehalfOf?: string };
     console.log('[welcome-quiz/submit] Received answers:', JSON.stringify(answers));
 
     if (!answers || !Array.isArray(answers) || answers.length === 0) {
       console.log('[welcome-quiz/submit] Invalid answers - returning 400');
       return NextResponse.json({ error: 'Invalid answers' }, { status: 400 });
     }
+
+    // Resolve effective user ID (supports single-phone mode via onBehalfOf)
+    const onBehalfOfResult = await validateOnBehalfOf(userId, onBehalfOf);
+    if (!onBehalfOfResult.valid) {
+      return NextResponse.json(
+        { error: onBehalfOfResult.error },
+        { status: 403 }
+      );
+    }
+    const effectiveUserId = onBehalfOfResult.effectiveUserId;
 
     // Find couple
     const couple = await getCoupleBasic(userId);
@@ -101,28 +112,35 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
 
     const { coupleId, partnerId } = couple;
 
+    // Determine the effective partner for answer normalization
+    // When submitting on behalf of phantom, "Me" means the phantom, "My partner" means the caller
+    const effectivePartnerId = effectiveUserId === userId ? partnerId : userId;
+
     // Normalize answers: convert "Me"/"My partner" to user IDs for correct matching
     const normalizedAnswers = answers.map(a => ({
       questionId: a.questionId,
-      answer: normalizeAnswer(a.answer, userId, partnerId),
+      answer: normalizeAnswer(a.answer, effectiveUserId, effectivePartnerId),
       originalAnswer: a.answer, // Keep original for display
     }));
     console.log('[welcome-quiz/submit] Normalized answers:', JSON.stringify(normalizedAnswers));
 
     const result = await withTransaction(async (client) => {
       // Insert or update user's answers (store normalized version)
+      // Use effectiveUserId so phantom partner's answers are stored under their ID
       await client.query(
         `INSERT INTO welcome_quiz_answers (couple_id, user_id, answers)
          VALUES ($1, $2, $3)
          ON CONFLICT (couple_id, user_id)
          DO UPDATE SET answers = $3, completed_at = NOW()`,
-        [coupleId, userId, JSON.stringify(normalizedAnswers)]
+        [coupleId, effectiveUserId, JSON.stringify(normalizedAnswers)]
       );
 
-      // Check if partner has also answered
+      // Check if the other player has also answered
+      // When onBehalfOf, the "partner" is the caller themselves
+      const otherPlayerId = effectiveUserId === userId ? partnerId : userId;
       const partnerResult = await client.query(
         `SELECT * FROM welcome_quiz_answers WHERE couple_id = $1 AND user_id = $2`,
-        [coupleId, partnerId]
+        [coupleId, otherPlayerId]
       );
       const partnerHasAnswered = partnerResult.rows.length > 0;
 

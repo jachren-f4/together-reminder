@@ -12,6 +12,8 @@ import '../services/sound_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/daily_quests_widget.dart' show questRouteObserver;
+import '../widgets/together/player_indicator_chip.dart';
+import '../services/play_mode_service.dart';
 import 'game_waiting_screen.dart';
 import 'you_or_me_match_results_screen.dart';
 import '../services/unified_game_service.dart';
@@ -23,9 +25,21 @@ import '../services/unified_game_service.dart';
 class YouOrMeMatchGameScreen extends StatefulWidget {
   final String? questId; // Optional: Daily quest ID for updating local status
 
+  /// Whether this is the second player's turn in together mode
+  final bool isSecondPlayer;
+
+  /// Phantom user ID to submit on behalf of (together mode)
+  final String? onBehalfOfUserId;
+
+  /// Pre-existing match ID to load (together mode - P2 plays same match)
+  final String? matchId;
+
   const YouOrMeMatchGameScreen({
     super.key,
     this.questId,
+    this.isSecondPlayer = false,
+    this.onBehalfOfUserId,
+    this.matchId,
   });
 
   @override
@@ -194,12 +208,19 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     });
 
     try {
-      final gameState = await _service.getOrCreateMatch();
+      YouOrMeGameState gameState;
+
+      if (widget.isSecondPlayer && widget.matchId != null) {
+        // Together mode P2: load existing match by ID
+        gameState = await _service.pollMatchState(widget.matchId!);
+      } else {
+        gameState = await _service.getOrCreateMatch();
+      }
 
       if (!mounted) return;
 
-      // Check if user has already answered
-      if (gameState.myAnswerCount > 0) {
+      // In together mode P2, skip "already answered" check
+      if (!widget.isSecondPlayer && gameState.myAnswerCount > 0) {
         // User already submitted - go to waiting or results
         if (gameState.isCompleted) {
           Navigator.of(context).pushReplacement(
@@ -217,8 +238,6 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
           );
         } else {
           // Partner hasn't answered yet - go to waiting screen
-          // Set pending results flag now so it's available if user leaves waiting screen
-          // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
           await StorageService().setPendingResultsMatchId('you_or_me', gameState.match.id);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -261,6 +280,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
 
     // Show decision stamp, then animate card out
     await _stampController.forward();
+    if (!mounted) return;
 
     // Update slide direction based on answer (right = Me, left = You)
     final isMe = answer == 'me';
@@ -320,6 +340,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
       final result = await _service.submitAllAnswers(
         matchId: _gameState!.match.id,
         answers: _selectedAnswers,
+        onBehalfOf: widget.onBehalfOfUserId,
       );
 
       if (!mounted) return;
@@ -358,19 +379,35 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
           ),
         );
       } else {
-        // Partner hasn't answered yet - go to waiting screen
-        // Set pending results flag now so it's available if user leaves waiting screen
-        // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
-        await StorageService().setPendingResultsMatchId('you_or_me', _gameState!.match.id);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => GameWaitingScreen(
-              matchId: _gameState!.match.id,
-              gameType: GameType.you_or_me,
-              questId: widget.questId,
+        // Partner hasn't answered yet
+        final isTogether = PlayModeService().isSinglePhone;
+
+        if (isTogether) {
+          // Together mode: go to handoff screen (no polling needed)
+          if (!mounted) return;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => GameWaitingScreen(
+                matchId: _gameState!.match.id,
+                gameType: GameType.you_or_me,
+                questId: widget.questId,
+                isTogetherMode: true,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          // Separate phones: go to polling waiting screen
+          await StorageService().setPendingResultsMatchId('you_or_me', _gameState!.match.id);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => GameWaitingScreen(
+                matchId: _gameState!.match.id,
+                gameType: GameType.you_or_me,
+                questId: widget.questId,
+              ),
+            ),
+          );
+        }
       }
     } catch (e) {
       Logger.error('Failed to submit answers', error: e, service: 'you_or_me');

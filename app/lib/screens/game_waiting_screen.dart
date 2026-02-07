@@ -9,9 +9,13 @@ import '../services/daily_quest_service.dart';
 import '../services/love_point_service.dart';
 import '../services/poke_service.dart';
 import '../services/notification_service.dart';
+import '../services/play_mode_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/together/together_handoff_screen.dart';
+import 'quiz_match_game_screen.dart';
 import 'quiz_match_results_screen.dart';
+import 'you_or_me_match_game_screen.dart';
 import 'you_or_me_match_results_screen.dart';
 import '../models/quiz_match.dart';
 import '../models/you_or_me_match.dart';
@@ -19,17 +23,22 @@ import '../models/you_or_me_match.dart';
 /// Unified waiting screen for all quiz-type games (classic, affirmation, you_or_me)
 ///
 /// Uses UnifiedGameService directly for polling - no intermediate service wrappers.
+/// In single-phone (together) mode, shows a handoff screen instead of polling.
 /// Navigates to the appropriate results screen based on game type.
 class GameWaitingScreen extends StatefulWidget {
   final String matchId;
   final GameType gameType;
   final String? questId;
 
+  /// Whether this is for the second player in together mode
+  final bool isTogetherMode;
+
   const GameWaitingScreen({
     super.key,
     required this.matchId,
     required this.gameType,
     this.questId,
+    this.isTogetherMode = false,
   });
 
   @override
@@ -83,10 +92,13 @@ class _GameWaitingScreenState extends State<GameWaitingScreen>
     }
   }
 
+  bool get _isTogetherMode =>
+      widget.isTogetherMode || PlayModeService().isSinglePhone;
+
   @override
   void initState() {
     super.initState();
-    Logger.debug('GameWaitingScreen initState for matchId=${widget.matchId}, gameType=${widget.gameType}', service: 'quiz');
+    Logger.debug('GameWaitingScreen initState for matchId=${widget.matchId}, gameType=${widget.gameType}, togetherMode=$_isTogetherMode', service: 'quiz');
 
     // Breathing animation for partner card
     _breatheController = AnimationController(
@@ -110,8 +122,10 @@ class _GameWaitingScreenState extends State<GameWaitingScreen>
     // Set pending results flag
     _setPendingResultsFlag();
 
-    // Start polling
-    _startPolling();
+    // In together mode, don't poll — show handoff instead
+    if (!_isTogetherMode) {
+      _startPolling();
+    }
   }
 
   Future<void> _setPendingResultsFlag() async {
@@ -392,11 +406,56 @@ class _GameWaitingScreenState extends State<GameWaitingScreen>
     }
   }
 
+  /// Navigate to game screen for the second player's turn (together mode)
+  void _handleTogetherReady() {
+    final playMode = PlayModeService();
+    final phantomUserId = playMode.phantomUserId;
+    final partnerName = playMode.partnerName;
+
+    if (widget.gameType == GameType.you_or_me) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => YouOrMeMatchGameScreen(
+            questId: widget.questId,
+            isSecondPlayer: true,
+            onBehalfOfUserId: phantomUserId,
+            matchId: widget.matchId,
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => QuizMatchGameScreen(
+            quizType: widget.gameType == GameType.affirmation
+                ? 'affirmation'
+                : 'classic',
+            questId: widget.questId,
+            isSecondPlayer: true,
+            onBehalfOfUserId: phantomUserId,
+            matchId: widget.matchId,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final partner = _storage.getPartner();
     final partnerName = partner?.name ?? 'your partner';
     final partnerEmoji = partner?.avatarEmoji ?? '👤';
+
+    // In together mode, show handoff screen instead of polling UI
+    if (_isTogetherMode) {
+      final togetherPartnerName = PlayModeService().partnerName;
+      return TogetherHandoffScreen(
+        partnerName: togetherPartnerName.isNotEmpty
+            ? togetherPartnerName
+            : partnerName,
+        onReady: _handleTogetherReady,
+      );
+    }
 
     if (_isUs2) return _buildUs2Screen(partnerName, partnerEmoji);
 

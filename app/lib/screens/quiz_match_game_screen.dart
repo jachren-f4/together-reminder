@@ -15,8 +15,12 @@ import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/daily_quests_widget.dart' show questRouteObserver;
 import '../widgets/notification_permission_popup.dart';
+import '../widgets/together/player_indicator_chip.dart';
+import '../services/play_mode_service.dart';
+import 'game_waiting_screen.dart';
 import 'quiz_match_waiting_screen.dart';
 import 'quiz_match_results_screen.dart';
+import '../services/unified_game_service.dart' show GameType;
 
 /// Quiz Match game screen (server-centric architecture)
 ///
@@ -28,10 +32,22 @@ class QuizMatchGameScreen extends StatefulWidget {
   final String quizType; // 'classic' or 'affirmation'
   final String? questId; // Optional: Daily quest ID for updating local status
 
+  /// Whether this is the second player's turn in together mode
+  final bool isSecondPlayer;
+
+  /// Phantom user ID to submit on behalf of (together mode)
+  final String? onBehalfOfUserId;
+
+  /// Pre-existing match ID to load (together mode - P2 plays same match)
+  final String? matchId;
+
   const QuizMatchGameScreen({
     super.key,
     required this.quizType,
     this.questId,
+    this.isSecondPlayer = false,
+    this.onBehalfOfUserId,
+    this.matchId,
   });
 
   @override
@@ -163,12 +179,20 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
     });
 
     try {
-      final gameState = await _service.getOrCreateMatch(widget.quizType);
+      QuizMatchGameState gameState;
+
+      if (widget.isSecondPlayer && widget.matchId != null) {
+        // Together mode P2: load existing match by ID
+        gameState = await _service.pollMatchState(widget.matchId!, quizType: widget.quizType);
+      } else {
+        gameState = await _service.getOrCreateMatch(widget.quizType);
+      }
 
       if (!mounted) return;
 
-      // Check if user has already answered
-      if (gameState.hasUserAnswered) {
+      // In together mode P2, skip the "already answered" check
+      // (the caller's perspective shows P1 answered, but P2 hasn't yet)
+      if (!widget.isSecondPlayer && gameState.hasUserAnswered) {
         // Go to waiting or results
         if (gameState.isCompleted) {
           Navigator.of(context).pushReplacement(
@@ -181,8 +205,6 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
           );
         } else {
           // Partner hasn't answered yet - go to waiting screen
-          // Set pending results flag now so it's available if user leaves waiting screen
-          // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
           final contentType = '${widget.quizType}_quiz';
           await StorageService().setPendingResultsMatchId(contentType, gameState.match.id);
           Navigator.of(context).pushReplacement(
@@ -200,6 +222,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
       // Check if we should show instruction banner
       // Only show on first classic quiz AND first question AND if not already seen
       final shouldShowBanner = widget.quizType == 'classic' &&
+          !widget.isSecondPlayer &&
           !StorageService().hasSeenQuizInstructionBanner();
 
       setState(() {
@@ -274,6 +297,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
         matchId: _gameState!.match.id,
         answers: _selectedAnswers,
         quizType: widget.quizType,
+        onBehalfOf: widget.onBehalfOfUserId,
       );
 
       if (!mounted) return;
@@ -314,39 +338,61 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
           ),
         );
       } else {
-        // Partner hasn't answered yet - go to waiting screen
-        // Set pending results flag now so it's available if user leaves waiting screen
-        // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
-        final contentType = '${widget.quizType}_quiz';
-        await StorageService().setPendingResultsMatchId(contentType, _gameState!.match.id);
+        // Partner hasn't answered yet
+        final isTogether = PlayModeService().isSinglePhone;
 
-        // Show notification permission popup for classic quiz if not yet authorized
-        if (widget.quizType == 'classic' && mounted) {
-          final isAuthorized = await NotificationService.isAuthorized();
-          if (!isAuthorized && mounted) {
-            final shouldEnable = await showDialog<bool>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const NotificationPermissionPopup(),
-            );
+        if (isTogether) {
+          // Together mode: go to handoff screen (no polling needed)
+          if (!mounted) return;
+          final gameType = widget.quizType == 'affirmation'
+              ? GameType.affirmation
+              : widget.quizType == 'you_or_me'
+                  ? GameType.you_or_me
+                  : GameType.classic;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => GameWaitingScreen(
+                matchId: _gameState!.match.id,
+                gameType: gameType,
+                questId: widget.questId,
+                isTogetherMode: true,
+              ),
+            ),
+          );
+        } else {
+          // Separate phones: go to polling waiting screen
+          // Set pending results flag now so it's available if user leaves waiting screen
+          final contentType = '${widget.quizType}_quiz';
+          await StorageService().setPendingResultsMatchId(contentType, _gameState!.match.id);
 
-            if (shouldEnable == true) {
-              await NotificationService.requestPermission();
+          // Show notification permission popup for classic quiz if not yet authorized
+          if (widget.quizType == 'classic' && mounted) {
+            final isAuthorized = await NotificationService.isAuthorized();
+            if (!isAuthorized && mounted) {
+              final shouldEnable = await showDialog<bool>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const NotificationPermissionPopup(),
+              );
+
+              if (shouldEnable == true) {
+                await NotificationService.requestPermission();
+              }
             }
           }
-        }
 
-        if (!mounted) return;
+          if (!mounted) return;
 
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => QuizMatchWaitingScreen(
-              matchId: _gameState!.match.id,
-              quizType: widget.quizType,
-              questId: widget.questId,
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => QuizMatchWaitingScreen(
+                matchId: _gameState!.match.id,
+                quizType: widget.quizType,
+                questId: widget.questId,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       Logger.error('Failed to submit answers', error: e, service: 'quiz');

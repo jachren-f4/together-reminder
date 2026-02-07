@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Partner Name Entry (Single Mode)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #3A3A3A;
+            --text-med: #5A5A5A;
+            --text-light: #707070;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Status bar */
+        .status-bar {
+            height: 60px;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        /* Navigation */
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            margin-bottom: 8px;
+        }
+        .back-btn {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-med);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            transition: opacity 0.2s;
+        }
+        .back-btn:hover { opacity: 0.7; }
+        .step-indicator {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            background: rgba(255,255,255,0.6);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .icon-placeholder {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+        }
+        .icon-placeholder .material-icons-round {
+            font-size: 56px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-med);
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            max-width: 280px;
+        }
+
+        /* Input field */
+        .input-wrapper {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        .name-input {
+            width: 100%;
+            background: #FFFFFF;
+            border: 2px solid rgba(0,0,0,0.06);
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .name-input::placeholder {
+            color: var(--text-light);
+            font-weight: 400;
+        }
+        .name-input:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 4px rgba(255,94,98,0.1);
+        }
+
+        /* Continue button */
+        .continue-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            margin-bottom: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .continue-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .continue-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255,107,107,0.4);
+        }
+        .continue-btn.active:active {
+            transform: translateY(0);
+        }
+
+        /* Badge chip */
+        .badge-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-med);
+            font-weight: 600;
+        }
+        .badge-chip .sparkle-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            flex-shrink: 0;
+        }
+
+        .heart-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .heart-icon .material-icons-round {
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== Success State ===== */
+        .success-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+            padding: 24px;
+        }
+        .success-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .avatars-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+        }
+        .success-overlay.visible .avatars-row {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .avatar-circle.user {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+        }
+        .avatar-circle.partner {
+            background: linear-gradient(135deg, #6C9CE9, #45B7D1);
+        }
+
+        .heart-between {
+            font-size: 36px;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.4s ease 0.6s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s;
+        }
+        .success-overlay.visible .heart-between {
+            opacity: 1;
+            transform: scale(1);
+            animation: heartPulse 1.2s ease-in-out 1s infinite;
+        }
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .avatar-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 8px;
+        }
+        .avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .success-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.5s ease 0.9s, transform 0.5s ease 0.9s;
+        }
+        .success-overlay.visible .success-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .next-btn {
+            margin-top: 32px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.5s ease 1.5s, transform 0.5s ease 1.5s;
+        }
+        .success-overlay.visible .next-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .next-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 32px rgba(255,107,107,0.4);
+        }
+
+        /* Confetti particles */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            opacity: 0;
+        }
+        .success-overlay.visible .confetti {
+            animation: confettiFall 2.5s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(-20px) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(600px) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <!-- Main Form Screen -->
+        <div class="status-bar"></div>
+
+        <div class="nav-row">
+            <button class="back-btn">&larr; Back</button>
+            <span class="step-indicator">Step 3 of 6</span>
+        </div>
+
+        <div class="content">
+            <div class="icon-placeholder"><span class="material-icons-round">favorite</span></div>
+            <h1 class="title">What's your partner's name?</h1>
+            <p class="subtitle">You'll play together on this phone. No download needed!</p>
+
+            <div class="input-wrapper">
+                <input
+                    type="text"
+                    class="name-input"
+                    id="partnerName"
+                    placeholder="Partner's name"
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+            </div>
+
+            <button class="continue-btn" id="continueBtn">Continue</button>
+
+            <div class="badge-chip">
+                <span class="sparkle-dot"></span>
+                One phone, two players, zero friction
+            </div>
+        </div>
+
+        <!-- Success Overlay -->
+        <div class="success-overlay" id="successOverlay">
+            <div class="confetti-container" id="confettiContainer"></div>
+
+            <div class="avatars-row">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle user">J</div>
+                    <span class="avatar-name">Joakim</span>
+                </div>
+                <div class="heart-between heart-icon"><span class="material-icons-round">favorite</span></div>
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle partner" id="partnerAvatar">T</div>
+                    <span class="avatar-name" id="partnerLabel">Taija</span>
+                </div>
+            </div>
+
+            <div class="success-text">Perfect! Let's get started</div>
+
+            <button class="next-btn" id="nextBtn">Next: Email & Sign Up &rarr;</button>
+        </div>
+    </div>
+
+    <script>
+        const nameInput = document.getElementById('partnerName');
+        const continueBtn = document.getElementById('continueBtn');
+        const successOverlay = document.getElementById('successOverlay');
+        const partnerAvatar = document.getElementById('partnerAvatar');
+        const partnerLabel = document.getElementById('partnerLabel');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Enable/disable button based on input
+        nameInput.addEventListener('input', () => {
+            const hasValue = nameInput.value.trim().length > 0;
+            continueBtn.classList.toggle('active', hasValue);
+        });
+
+        // Handle continue click
+        continueBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            if (!name) return;
+
+            // Update partner avatar and label
+            partnerAvatar.textContent = name.charAt(0).toUpperCase();
+            partnerLabel.textContent = name;
+
+            // Spawn confetti
+            spawnConfetti();
+
+            // Show success overlay
+            successOverlay.classList.add('visible');
+        });
+
+        // Handle next button
+        nextBtn.addEventListener('click', () => {
+            // Reset to initial state
+            successOverlay.classList.remove('visible');
+            nameInput.value = '';
+            continueBtn.classList.remove('active');
+            confettiContainer.innerHTML = '';
+        });
+
+        function spawnConfetti() {
+            const colors = ['#FF6B6B', '#FF9F43', '#6C9CE9', '#45B7D1', '#FFD700', '#FF5E62', '#A78BFA'];
+            confettiContainer.innerHTML = '';
+
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = (Math.random() * 1.2) + 's';
+                confetti.style.width = (4 + Math.random() * 8) + 'px';
+                confetti.style.height = (4 + Math.random() * 8) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confettiContainer.appendChild(confetti);
+            }
+        }
+    </script>
+</body>
+</html>

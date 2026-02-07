@@ -225,9 +225,9 @@ class JournalEntry extends HiveObject {
       case JournalEntryType.youOrMe:
         return 'You or Me';
       case JournalEntryType.linked:
-        return 'Crossword';
+        return 'Game';
       case JournalEntryType.wordSearch:
-        return 'Word Search';
+        return 'Game';
       case JournalEntryType.stepsTogether:
         return BrandLoader().config.brand == Brand.us2 ? 'Steps' : 'Steps Together';
     }

@@ -28,10 +28,14 @@ import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
 import 'package:togetherremind/widgets/partner_left_dialog.dart';
 import 'package:togetherremind/services/user_notification_service.dart';
+import '../services/play_mode_service.dart';
 import '../utils/logger.dart';
 
 class PairingScreen extends StatefulWidget {
-  const PairingScreen({super.key});
+  /// When true, success navigation goes back to Settings instead of completing onboarding.
+  final bool fromSettings;
+
+  const PairingScreen({super.key, this.fromSettings = false});
 
   @override
   State<PairingScreen> createState() => _PairingScreenState();
@@ -133,6 +137,12 @@ class _PairingScreenState extends State<PairingScreen> {
 
   /// Complete onboarding after pairing - navigate to Welcome Quiz (paywall shown after)
   Future<void> _completeOnboarding() async {
+    // Clear phantom partner state if upgrading from single-phone mode
+    if (PlayModeService().isPhantomPartner) {
+      PlayModeService().clearPhantomPartner();
+      Logger.info('Cleared phantom partner state after real pairing', service: 'pairing');
+    }
+
     final subscriptionService = SubscriptionService();
 
     // Transfer existing subscription to new couple if user has one
@@ -174,6 +184,15 @@ class _PairingScreenState extends State<PairingScreen> {
 
   /// Navigate to Welcome Quiz or MainScreen based on unlock state
   Future<void> _navigateToNextScreen() async {
+    // If opened from Settings (e.g. upgrading from phantom to real partner),
+    // go back to Settings instead of completing onboarding
+    if (widget.fromSettings) {
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      return;
+    }
+
     final unlockService = UnlockService();
     final unlockState = await unlockService.getUnlockState();
 

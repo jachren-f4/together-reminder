@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 Single-Phone Mode — Mockups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --text-dark: #3A3A3A;
+            --text-med: #5A5A5A;
+            --text-light: #707070;
+            --cream: #FFF8F0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 36px;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,94,98,0.5), 0 0 40px rgba(255,94,98,0.3);
+            margin-bottom: 8px;
+        }
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-med);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .grid {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .section-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 32px 0 16px;
+            padding-left: 4px;
+        }
+        .section-label:first-child { margin-top: 0; }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255,107,107,0.15);
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon .material-icons-round {
+            font-size: 24px;
+            color: white;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-med);
+            line-height: 1.5;
+        }
+        .card-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+        .badge-new {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            color: white;
+        }
+        .badge-modified {
+            background: rgba(255,94,98,0.1);
+            color: var(--pink);
+        }
+        .badge-comparison {
+            background: rgba(107,107,255,0.1);
+            color: #6B6BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Us 2.0</div>
+        <div class="title">Single-Phone Mode Mockups</div>
+        <div class="subtitle">Interactive mockups for all UI changes needed to support single-phone (together) mode. Every game uses the same pass-the-phone handoff pattern.</div>
+    </div>
+
+    <div class="grid">
+        <div class="section-label">New Screens</div>
+        <div class="cards">
+            <a class="card" href="partner-name-entry.html">
+                <div class="card-icon"><span class="material-icons-round">favorite</span></div>
+                <span class="card-badge badge-new">New</span>
+                <div class="card-title">Partner Name Entry</div>
+                <div class="card-desc">Replaces pairing screen in onboarding. "What's your partner's name?" — creates phantom user behind the scenes.</div>
+            </a>
+        </div>
+
+        <div class="section-label">Core Flows</div>
+        <div class="cards">
+            <a class="card" href="quiz-flow.html">
+                <div class="card-icon"><span class="material-icons-round">psychology</span></div>
+                <span class="card-badge badge-modified">Full Flow</span>
+                <div class="card-title">Quiz Flow (Together Mode)</div>
+                <div class="card-desc">Complete interactive flow: Intro → Player 1 answers → Handoff → Player 2 answers → Instant Results with "Discuss this!" prompts.</div>
+            </a>
+            <a class="card" href="linked-turn-flow.html">
+                <div class="card-icon"><span class="material-icons-round">link</span></div>
+                <span class="card-badge badge-modified">Full Flow</span>
+                <div class="card-title">Linked Turn Flow</div>
+                <div class="card-desc">Turn-based crossword with handoff dialog between players. Shows how existing turn_complete_dialog becomes a pass-the-phone prompt.</div>
+            </a>
+        </div>
+
+        <div class="section-label">Comparisons (Current vs Together)</div>
+        <div class="cards">
+            <a class="card" href="waiting-handoff.html">
+                <div class="card-icon"><span class="material-icons-round">hourglass_empty</span></div>
+                <span class="card-badge badge-comparison">Compare</span>
+                <div class="card-title">Waiting Screen → Handoff</div>
+                <div class="card-desc">Side-by-side: current async waiting screen (polling) vs together-mode handoff ("Pass to partner" + "I'M READY").</div>
+            </a>
+            <a class="card" href="results-discuss.html">
+                <div class="card-icon"><span class="material-icons-round">celebration</span></div>
+                <span class="card-badge badge-comparison">Compare</span>
+                <div class="card-title">Results with Discuss Prompts</div>
+                <div class="card-desc">Together-mode results show "Discuss this!" for disagreements since both players are present. Compare to async results.</div>
+            </a>
+        </div>
+
+        <div class="section-label">Modified Screens</div>
+        <div class="cards">
+            <a class="card" href="home-screen.html">
+                <div class="card-icon"><span class="material-icons-round">home</span></div>
+                <span class="card-badge badge-modified">Modified</span>
+                <div class="card-title">Home Screen</div>
+                <div class="card-desc">Home with phantom partner: new quest card badges ("PASS TO TAIJA", "YOUR TURN"), locked Steps Together, simplified states.</div>
+            </a>
+            <a class="card" href="quest-card-states.html">
+                <div class="card-icon"><span class="material-icons-round">style</span></div>
+                <span class="card-badge badge-modified">Modified</span>
+                <div class="card-title">Quest Card States</div>
+                <div class="card-desc">All 7 quest card states for single-phone mode: Available, Pass to Partner, Completed, Locked, Cooldown, Your Turn, Partner's Turn.</div>
+            </a>
+            <a class="card" href="settings-profile.html">
+                <div class="card-icon"><span class="material-icons-round">settings</span></div>
+                <span class="card-badge badge-modified">Modified</span>
+                <div class="card-title">Settings & Profile</div>
+                <div class="card-desc">Settings with "Play on two devices" section. Profile with phantom partner name and upgrade nudge.</div>
+            </a>
+            <a class="card" href="upgrade-prompt.html">
+                <div class="card-icon"><span class="material-icons-round">devices</span></div>
+                <span class="card-badge badge-modified">Modified</span>
+                <div class="card-title">Upgrade Prompts</div>
+                <div class="card-desc">Contextual upgrade popup shown when phantom user tries Poke, Steps Together, or other two-device features.</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

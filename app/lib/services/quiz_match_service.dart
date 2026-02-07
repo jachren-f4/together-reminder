@@ -60,10 +60,12 @@ class QuizMatchService {
   /// [matchId] - The match ID
   /// [answers] - Array of answer indices
   /// [quizType] - 'classic' or 'affirmation'
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<QuizMatchSubmitResult> submitAnswers({
     required String matchId,
     required List<int> answers,
     String quizType = 'classic',
+    String? onBehalfOf,
   }) async {
     try {
       final gameType = quizType == 'affirmation'
@@ -74,6 +76,7 @@ class QuizMatchService {
         gameType: gameType,
         matchId: matchId,
         answers: answers,
+        onBehalfOf: onBehalfOf,
       );
 
       return QuizMatchSubmitResult(

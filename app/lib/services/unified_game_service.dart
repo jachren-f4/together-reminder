@@ -394,19 +394,27 @@ class UnifiedGameService {
   /// [gameType] - Type of game
   /// [matchId] - The match ID
   /// [answers] - Array of answer indices
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<GamePlayResponse> submitAnswers({
     required GameType gameType,
     required String matchId,
     required List<int> answers,
+    String? onBehalfOf,
   }) async {
     try {
+      final body = <String, dynamic>{
+        'matchId': matchId,
+        'answers': answers,
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await _apiRequest(
         'POST',
         '/api/sync/game/${gameType.apiPath}/play',
-        body: {
-          'matchId': matchId,
-          'answers': answers,
-        },
+        body: body,
       );
 
       final gameResponse = GamePlayResponse.fromJson(response);

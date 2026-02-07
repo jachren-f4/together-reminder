@@ -5,6 +5,7 @@ import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/models/cooldown_status.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
+import 'package:togetherremind/services/play_mode_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/widgets/quest_guidance_overlay.dart';
@@ -447,6 +448,80 @@ class _Us2QuestCardState extends State<Us2QuestCard>
       );
     }
 
+    final isSinglePhone = PlayModeService().isSinglePhone;
+    final partnerDisplayName = PlayModeService().isPhantomPartner
+        ? PlayModeService().partnerName
+        : (partner?.name ?? 'Partner');
+
+    // Together mode: special badges for single-phone play
+    if (isSinglePhone) {
+      // Turn-based games (Linked, Word Search) in together mode
+      if (_isTurnBased && _hasActiveGame) {
+        if (_isMyTurn == true) {
+          // My turn in together mode - show "YOUR TURN" (blue)
+          return _Us2StatusBadge(
+            style: _StatusStyle.urgent,
+            text: 'YOUR TURN',
+            userInitial: _getUserInitial(user),
+            showInitialOnGradient: true,
+          );
+        } else {
+          // Partner's turn - show "PASS TO [PARTNER]" (orange)
+          return _Us2StatusBadge(
+            style: _StatusStyle.passToPartner,
+            text: 'PASS TO ${partnerDisplayName.toUpperCase()}',
+          );
+        }
+      }
+
+      // Check for pending results first (same as async mode)
+      String? contentType;
+      if (widget.quest!.type == QuestType.quiz) {
+        contentType = widget.quest!.formatType == 'affirmation' ? 'affirmation_quiz' : 'classic_quiz';
+      } else if (widget.quest!.type == QuestType.youOrMe) {
+        contentType = 'you_or_me';
+      } else if (widget.quest!.type == QuestType.linked) {
+        contentType = 'linked';
+      } else if (widget.quest!.type == QuestType.wordSearch) {
+        contentType = 'word_search';
+      }
+
+      if (contentType != null && bothCompleted && StorageService().hasPendingResults(contentType)) {
+        return _Us2StatusBadge(
+          style: _StatusStyle.resultsReady,
+          text: 'Results are ready!',
+        );
+      }
+
+      // Both completed
+      if (bothCompleted) {
+        final hasAnotherPlay = widget.cooldownStatus != null &&
+            widget.cooldownStatus!.remainingInBatch > 0 &&
+            !widget.cooldownStatus!.isOnCooldown;
+
+        return _Us2StatusBadge(
+          style: _StatusStyle.completed,
+          text: hasAnotherPlay ? '1/2 completed' : 'Completed',
+        );
+      }
+
+      // P1 answered, P2 hasn't → "PASS TO [PARTNER]"
+      if (userCompleted) {
+        return _Us2StatusBadge(
+          style: _StatusStyle.passToPartner,
+          text: 'PASS TO ${partnerDisplayName.toUpperCase()}',
+        );
+      }
+
+      // Neither answered → "PLAY TOGETHER"
+      return const _Us2StatusBadge(
+        style: _StatusStyle.playTogether,
+        text: 'PLAY TOGETHER',
+      );
+    }
+
+    // ---- Async (separate phones) mode below ----
+
     // Turn-based games (Linked, Word Search) - check turn status FIRST
     if (_isTurnBased && _hasActiveGame) {
       if (_isMyTurn == true && partner != null) {
@@ -547,6 +622,10 @@ enum _StatusStyle {
   completed,
   locked,
   onCooldown,
+  /// Together mode: neither player has answered yet
+  playTogether,
+  /// Together mode: P1 answered, pass phone to P2
+  passToPartner,
 }
 
 /// Status badge widget with different styles
@@ -639,6 +718,10 @@ class _Us2StatusBadgeState extends State<_Us2StatusBadge>
         return _buildLockedBadge();
       case _StatusStyle.onCooldown:
         return _buildOnCooldownBadge();
+      case _StatusStyle.playTogether:
+        return _buildPlayTogetherBadge();
+      case _StatusStyle.passToPartner:
+        return _buildPassToPartnerBadge();
     }
   }
 
@@ -925,6 +1008,74 @@ class _Us2StatusBadgeState extends State<_Us2StatusBadge>
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF888888),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlayTogetherBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+        ),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink.withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.people, size: 14, color: Colors.white),
+          const SizedBox(width: 8),
+          Text(
+            'PLAY TOGETHER',
+            style: GoogleFonts.nunito(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPassToPartnerBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFF9F43),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF9F43).withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.phone_android, size: 14, color: Colors.white),
+          const SizedBox(width: 8),
+          Text(
+            widget.text,
+            style: GoogleFonts.nunito(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+              color: Colors.white,
             ),
           ),
         ],

@@ -8,6 +8,7 @@ import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/love_point_service.dart';
 import '../services/unlock_service.dart';
+import '../services/play_mode_service.dart';
 import '../models/word_search.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
@@ -15,6 +16,7 @@ import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
+import '../widgets/together/player_indicator_chip.dart';
 import '../widgets/unlock_popup.dart';
 import '../animations/animation_config.dart';
 import '../mixins/game_polling_mixin.dart';
@@ -66,7 +68,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   // GamePollingMixin overrides
   @override
-  bool get shouldPoll => !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
+  bool get _isTogetherMode => PlayModeService().isSinglePhone;
+
+  bool get shouldPoll => !_isTogetherMode && !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
 
   @override
   Future<void> onPollUpdate() async {
@@ -159,6 +163,16 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     super.dispose();
   }
 
+  /// Handle "I'm Ready" in together mode — reload game state for partner's turn
+  void _handleTogetherReady() {
+    setState(() {
+      _showTurnComplete = false;
+      _clearSelection();
+      _hintPosition = null;
+    });
+    _loadGameState();
+  }
+
   // Track if cooldown is active
   bool _isCooldownActive = false;
 
@@ -173,14 +187,15 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       final gameState = await _service.getOrCreateMatch();
       if (mounted) {
         // Show dialog if it's not my turn when entering the game
-        final showPartnerTurnDialog = !gameState.isMyTurn;
+        final showPartnerTurnDialog = !_isTogetherMode && !gameState.isMyTurn;
+        final showTogetherHandoff = _isTogetherMode && !gameState.isMyTurn;
 
         setState(() {
           _gameState = gameState;
           _isLoading = false;
           _clearSelection();
           _hintPosition = null;
-          _showTurnComplete = false;
+          _showTurnComplete = showTogetherHandoff;
           _showPartnerFirst = showPartnerTurnDialog;
         });
         startPolling();
@@ -320,10 +335,22 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     setState(() => _isSubmitting = true);
 
     try {
+      // In together mode, use onBehalfOf when it's the phantom user's turn
+      String? onBehalfOf;
+      if (_isTogetherMode) {
+        final playMode = PlayModeService();
+        final phantomId = playMode.phantomUserId;
+        if (phantomId != null &&
+            _gameState!.match.currentTurnUserId == phantomId) {
+          onBehalfOf = phantomId;
+        }
+      }
+
       final result = await _service.submitWord(
         matchId: _gameState!.match.matchId,
         word: _selectedWord,
         positions: _selectedPositions,
+        onBehalfOf: onBehalfOf,
       );
 
       if (result.valid) {
@@ -477,9 +504,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               if (_showTurnComplete)
                 Positioned.fill(
                   child: TurnCompleteDialog(
-                    partnerName: _storage.getPartner()?.name ?? 'Partner',
+                    partnerName: _isTogetherMode
+                        ? PlayModeService().partnerName
+                        : (_storage.getPartner()?.name ?? 'Partner'),
                     onLeave: () => Navigator.of(context).pop(),
                     onStay: () => setState(() => _showTurnComplete = false),
+                    isTogetherMode: _isTogetherMode,
+                    onTogetherReady: _isTogetherMode ? _handleTogetherReady : null,
                   ),
                 ),
               if (_showPartnerFirst)

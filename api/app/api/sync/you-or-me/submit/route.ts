@@ -10,6 +10,7 @@ import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS } from '@/lib/lp/config';
 import { recordActivityPlay, getCooldownStatus } from '@/lib/magnets';
+import { validateOnBehalfOf } from '@/lib/phantom/on-behalf-of';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export const dynamic = 'force-dynamic';
  *   answer: { questionId, questionPrompt, questionContent, answerValue, answeredAt }
  *   OR
  *   answers: Array<{ questionId, questionPrompt, questionContent, answerValue, answeredAt }>
+ *   onBehalfOf?: string - phantom user ID for single-phone mode
  * }
  */
 export const POST = withAuthOrDevBypass(async (req, userId, email) => {
@@ -31,7 +33,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
   try {
     const body = await req.json();
-    const { sessionId, answer, answers: bulkAnswers } = body;
+    const { sessionId, answer, answers: bulkAnswers, onBehalfOf } = body;
 
     // Support both single answer and bulk answers
     const answersToSubmit = bulkAnswers || (answer ? [answer] : []);
@@ -43,6 +45,16 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         { status: 400 }
       );
     }
+
+    // Resolve effective user ID (supports single-phone mode via onBehalfOf)
+    const onBehalfOfResult = await validateOnBehalfOf(userId, onBehalfOf);
+    if (!onBehalfOfResult.valid) {
+      return NextResponse.json(
+        { error: onBehalfOfResult.error },
+        { status: 403 }
+      );
+    }
+    const effectiveUserId = onBehalfOfResult.effectiveUserId;
 
     await client.query('BEGIN');
 
@@ -95,7 +107,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     // Server-side cooldown check (safety net for client bypass)
     // Only check if user hasn't submitted any answers yet (allows completing in-progress games)
-    if (!existingAnswersRaw[userId] || existingAnswersRaw[userId].length === 0) {
+    if (!existingAnswersRaw[effectiveUserId] || existingAnswersRaw[effectiveUserId].length === 0) {
       const cooldownStatus = await getCooldownStatus(coupleId, 'you_or_me');
 
       if (!cooldownStatus.canPlay) {
@@ -124,18 +136,18 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     const totalQuestions = questions.length;
 
     // Initialize user's answers array if not exists
-    if (!existingAnswers[userId]) {
-      existingAnswers[userId] = [];
+    if (!existingAnswers[effectiveUserId]) {
+      existingAnswers[effectiveUserId] = [];
     }
 
     // Add new answers (avoiding duplicates by questionId)
     const existingQuestionIds = new Set(
-      existingAnswers[userId].map((a: any) => a.questionId)
+      existingAnswers[effectiveUserId].map((a: any) => a.questionId)
     );
 
     for (const ans of answersToSubmit) {
       if (!existingQuestionIds.has(ans.questionId)) {
-        existingAnswers[userId].push({
+        existingAnswers[effectiveUserId].push({
           questionId: ans.questionId,
           questionPrompt: ans.questionPrompt,
           questionContent: ans.questionContent,
@@ -147,7 +159,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     }
 
     // Check completion status
-    const userAnswerCount = existingAnswers[userId]?.length || 0;
+    const userAnswerCount = existingAnswers[effectiveUserId]?.length || 0;
     const partnerAnswerCount = existingAnswers[partnerId]?.length || 0;
     const userComplete = userAnswerCount >= totalQuestions;
     const partnerComplete = partnerAnswerCount >= totalQuestions;

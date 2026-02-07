@@ -18,6 +18,7 @@ import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { RouteContext } from '@/lib/auth/middleware';
 import {
   GameType,
+  CoupleInfo,
   getCouple,
   getOrCreateMatch,
   getMatchById,
@@ -26,6 +27,7 @@ import {
   buildResult,
   loadQuiz,
 } from '@/lib/game/handler';
+import { validateOnBehalfOf } from '@/lib/phantom/on-behalf-of';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +53,7 @@ export const POST = withAuthOrDevBypass(async (
     }
 
     const body = await req.json();
-    const { localDate, matchId, answers } = body;
+    const { localDate, matchId, answers, onBehalfOf } = body;
 
     // Get couple info
     const couple = await getCouple(userId);
@@ -60,6 +62,25 @@ export const POST = withAuthOrDevBypass(async (
         { error: 'User is not part of a couple' },
         { status: 404 }
       );
+    }
+
+    // Handle onBehalfOf for single-phone mode (phantom user)
+    let effectiveCouple: CoupleInfo = couple;
+    if (onBehalfOf) {
+      const validation = await validateOnBehalfOf(userId, onBehalfOf);
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: validation.error },
+          { status: 403 }
+        );
+      }
+      // Create a modified couple where isPlayer1 reflects the phantom user's position
+      const phantomIsPlayer1 = onBehalfOf === couple.user1Id;
+      effectiveCouple = {
+        ...couple,
+        isPlayer1: phantomIsPlayer1,
+        partnerId: phantomIsPlayer1 ? couple.user2Id : couple.user1Id,
+      };
     }
 
     // Determine what action to take based on request params
@@ -112,7 +133,7 @@ export const POST = withAuthOrDevBypass(async (
     let result = null;
     if (hasAnswers) {
       try {
-        const submitResult = await submitAnswers(match, couple, answers);
+        const submitResult = await submitAnswers(match, effectiveCouple, answers);
         match = submitResult.match;
         result = submitResult.result;
       } catch (error: any) {
@@ -123,7 +144,7 @@ export const POST = withAuthOrDevBypass(async (
       }
     }
 
-    // Build game state
+    // Build game state (use original couple for the caller's perspective)
     console.log(`🎯 PLAY ROUTE: Building game state - userId=${userId}, couple.isPlayer1=${couple.isPlayer1}, couple.user1Id=${couple.user1Id}, couple.user2Id=${couple.user2Id}`);
     const state = buildGameState(match, couple);
     console.log(`🎯 PLAY ROUTE: Game state built - userAnswered=${state.userAnswered}, partnerAnswered=${state.partnerAnswered}, isCompleted=${state.isCompleted}`);

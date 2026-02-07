@@ -70,6 +70,11 @@ npx tsx scripts/wipe_all_accounts.ts
 
 # Push database migrations
 npm run db:push
+
+# Deploy API to production (via git push — do NOT use `vercel --prod` from CLI)
+# Vercel auto-deploys on push to main. Root Directory is set to `api` in the Vercel dashboard.
+# The .vercel/ config lives in api/.vercel/ — do not move it to repo root.
+git add -A && git commit -m "deploy" && git push
 ```
 
 ### Quick Development Start

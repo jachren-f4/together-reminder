@@ -50,9 +50,11 @@ class YouOrMeMatchService {
   /// Uses unified game API (POST /api/sync/game/you_or_me/play).
   /// [matchId] - The match ID
   /// [answers] - List of answers: 'you' (0) or 'me' (1)
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<YouOrMeBulkSubmitResult> submitAllAnswers({
     required String matchId,
     required List<String> answers,
+    String? onBehalfOf,
   }) async {
     try {
       // Convert string answers to indices: 'you' = 0, 'me' = 1
@@ -62,6 +64,7 @@ class YouOrMeMatchService {
         gameType: GameType.you_or_me,
         matchId: matchId,
         answers: answerIndices,
+        onBehalfOf: onBehalfOf,
       );
 
       return YouOrMeBulkSubmitResult(

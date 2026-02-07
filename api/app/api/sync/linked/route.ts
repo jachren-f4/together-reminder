@@ -12,6 +12,7 @@ import { query, getClient } from '@/lib/db/pool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { getCooldownStatus, COOLDOWN_HOURS } from '@/lib/magnets/cooldowns';
+import { LINKED_CONFIG } from '@/lib/linked/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -147,7 +148,7 @@ function countAnswerCells(puzzle: any): number {
 }
 
 // Generate rack from remaining unfilled cells
-function generateRack(puzzle: any, boardState: Record<string, string>, maxSize: number = 5): string[] {
+function generateRack(puzzle: any, boardState: Record<string, string>, maxSize: number = LINKED_CONFIG.RACK_SIZE): string[] {
   const { grid, gridnums, size } = puzzle;
   const available: string[] = [];
 

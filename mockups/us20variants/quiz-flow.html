@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Quiz Flow (Single Phone)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --cream: #FFF8F0;
+            --card-salmon: #FF7B6B;
+            --text-dark: #2D2D2D;
+            --text-med: #6B6B6B;
+            --text-light: #9B9B9B;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: #F0E8E4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .phone {
+            width: 390px;
+            height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* All screens stacked */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 0;
+            transform: translateX(40px);
+            pointer-events: none;
+        }
+        .screen.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+        .screen.exit-left {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        /* === INTRO SCREEN === */
+        .intro-screen {
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            text-align: center;
+        }
+        .intro-emoji { font-size: 80px; margin-bottom: 24px; }
+        .intro-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            color: white;
+            margin-bottom: 20px;
+        }
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+        .intro-desc {
+            font-size: 15px;
+            color: var(--text-med);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            max-width: 300px;
+        }
+        .intro-players {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            margin-bottom: 48px;
+        }
+        .intro-players .player-chip {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .intro-players .arrow { color: var(--pink); font-size: 16px; }
+        .play-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            transition: all 0.2s;
+        }
+        .play-btn:hover { transform: translateY(-2px); }
+
+        /* === GAME SCREEN === */
+        .game-screen {
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+        }
+        .game-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(10px);
+        }
+        .game-header-left { display: flex; align-items: center; gap: 10px; }
+        .player-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .player-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .player-dot.p1 { background: var(--grad-start); }
+        .player-dot.p2 { background: #6B8CFF; }
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .counter-badge {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--pink);
+            background: rgba(255,94,98,0.1);
+            padding: 6px 12px;
+            border-radius: 10px;
+        }
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 20px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .dot.filled { background: var(--grad-start); width: 24px; border-radius: 4px; }
+        .dot.current { background: var(--pink); width: 24px; border-radius: 4px; }
+
+        .question-area {
+            flex: 1;
+            padding: 8px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .question-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 30px rgba(255,107,107,0.1);
+            margin-bottom: 20px;
+        }
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+            text-align: center;
+        }
+        .answers-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        .answer-btn {
+            padding: 16px 20px;
+            border: 2px solid rgba(0,0,0,0.06);
+            border-radius: 16px;
+            background: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .answer-btn:hover { border-color: rgba(255,107,107,0.3); }
+        .answer-btn.selected {
+            border-color: var(--pink);
+            background: rgba(255,94,98,0.06);
+            color: var(--pink);
+        }
+        .answer-btn.selected::after {
+            content: ' ✓';
+        }
+
+        .next-btn-area { padding: 16px 20px 32px; }
+        .next-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            transition: all 0.2s;
+        }
+        .next-btn:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
+
+        /* === HANDOFF SCREEN === */
+        .handoff-screen {
+            background: linear-gradient(180deg, #2D1B3D 0%, #1A1028 50%, #2D1B3D 100%);
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .handoff-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(107,140,255,0.2) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+        }
+        .handoff-hand {
+            font-size: 52px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            animation: handWave 2s ease-in-out infinite;
+        }
+        @keyframes handWave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        .handoff-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 32px;
+            background: linear-gradient(135deg, #C4E0FF, #A8C8FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 50px rgba(168,200,255,0.3);
+            animation: floatUp 4s ease-in-out infinite;
+        }
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .handoff-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .handoff-sub {
+            font-size: 14px;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+        .ready-btn {
+            width: calc(100% - 48px);
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .ready-btn:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.4);
+        }
+        .handoff-peeking {
+            position: absolute;
+            bottom: 56px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.25);
+            z-index: 1;
+        }
+
+        /* === RESULTS SCREEN === */
+        .results-screen {
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+        }
+        .results-header {
+            padding: 50px 24px 20px;
+            text-align: center;
+        }
+        .results-emoji { font-size: 64px; margin-bottom: 16px; }
+        .results-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .results-match {
+            font-size: 15px;
+            color: var(--text-med);
+        }
+        .lp-banner {
+            margin: 16px 20px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(255,165,0,0.3);
+        }
+        .lp-text {
+            font-size: 16px;
+            font-weight: 800;
+            color: white;
+        }
+        .results-list {
+            flex: 1;
+            padding: 8px 20px;
+            overflow-y: auto;
+        }
+        .result-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .result-question {
+            font-size: 13px;
+            color: var(--text-med);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .result-answers {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-answer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .result-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .result-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            background: #F5F0EC;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .result-match-icon {
+            font-size: 24px;
+        }
+        .discuss-prompt {
+            background: rgba(255,94,98,0.06);
+            border: 1px dashed rgba(255,94,98,0.3);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--pink);
+            font-weight: 600;
+            text-align: center;
+        }
+        .results-bottom { padding: 12px 20px 36px; }
+
+        /* Step indicator */
+        .flow-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 14px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .flow-step {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        .flow-step.active { background: var(--pink); }
+        .flow-step.done { background: rgba(255,255,255,0.5); }
+        .flow-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="flow-indicator">
+        <div class="flow-step active" id="fs0"></div>
+        <div class="flow-step" id="fs1"></div>
+        <div class="flow-step" id="fs2"></div>
+        <div class="flow-step" id="fs3"></div>
+        <div class="flow-step" id="fs4"></div>
+        <span class="flow-label" id="flowLabel">Intro</span>
+    </div>
+
+    <div class="phone">
+        <!-- SCREEN 0: INTRO -->
+        <div class="screen intro-screen active" id="s0">
+            <div class="intro-emoji">🧠</div>
+            <div class="intro-badge">CLASSIC QUIZ</div>
+            <div class="intro-title">How Well Do<br>You Know Each Other?</div>
+            <div class="intro-desc">5 questions about your relationship. Both answer, then see how you matched!</div>
+            <div class="intro-players">
+                <span class="player-chip">😊 Joakim</span>
+                <span class="arrow">→</span>
+                <span style="font-size:16px">🔄</span>
+                <span class="arrow">→</span>
+                <span class="player-chip">😊 Taija</span>
+            </div>
+            <button class="play-btn" onclick="goTo(1)">Play Together</button>
+        </div>
+
+        <!-- SCREEN 1: PLAYER 1 QUESTIONS -->
+        <div class="screen game-screen" id="s1">
+            <div class="game-header">
+                <div class="game-header-left">
+                    <div class="player-indicator">
+                        <div class="player-dot p1"></div>
+                        Joakim
+                    </div>
+                    <div class="game-title">Classic Quiz</div>
+                </div>
+                <div class="counter-badge" id="p1Counter">1 / 5</div>
+            </div>
+            <div class="progress-dots" id="p1Dots">
+                <div class="dot current"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="question-area">
+                <div class="question-card">
+                    <div class="question-text" id="p1Question">What does your partner value most in your relationship?</div>
+                </div>
+                <div class="answers-grid" id="p1Answers">
+                    <button class="answer-btn" onclick="selectAnswer(1, this)">Quality time together</button>
+                    <button class="answer-btn" onclick="selectAnswer(1, this)">Open communication</button>
+                    <button class="answer-btn" onclick="selectAnswer(1, this)">Physical affection</button>
+                    <button class="answer-btn" onclick="selectAnswer(1, this)">Acts of kindness</button>
+                </div>
+            </div>
+            <div class="next-btn-area">
+                <button class="next-btn" id="p1Next" disabled onclick="nextQuestion(1)">Next</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: HANDOFF -->
+        <div class="screen handoff-screen" id="s2">
+            <div class="handoff-glow"></div>
+            <div class="handoff-hand">🤲</div>
+            <div class="handoff-avatar">😊</div>
+            <div class="handoff-title">Pass to Taija</div>
+            <div class="handoff-sub">Answers are hidden. No peeking!</div>
+            <button class="ready-btn" onclick="goTo(3)">I'M READY</button>
+            <div class="handoff-peeking">👀 Joakim's answers are safe</div>
+        </div>
+
+        <!-- SCREEN 3: PLAYER 2 QUESTIONS -->
+        <div class="screen game-screen" id="s3">
+            <div class="game-header">
+                <div class="game-header-left">
+                    <div class="player-indicator">
+                        <div class="player-dot p2"></div>
+                        Taija
+                    </div>
+                    <div class="game-title">Classic Quiz</div>
+                </div>
+                <div class="counter-badge" id="p2Counter">1 / 5</div>
+            </div>
+            <div class="progress-dots" id="p2Dots">
+                <div class="dot current"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="question-area">
+                <div class="question-card">
+                    <div class="question-text" id="p2Question">What does your partner value most in your relationship?</div>
+                </div>
+                <div class="answers-grid" id="p2Answers">
+                    <button class="answer-btn" onclick="selectAnswer(2, this)">Quality time together</button>
+                    <button class="answer-btn" onclick="selectAnswer(2, this)">Open communication</button>
+                    <button class="answer-btn" onclick="selectAnswer(2, this)">Physical affection</button>
+                    <button class="answer-btn" onclick="selectAnswer(2, this)">Acts of kindness</button>
+                </div>
+            </div>
+            <div class="next-btn-area">
+                <button class="next-btn" id="p2Next" disabled onclick="nextQuestion(2)">Next</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: RESULTS -->
+        <div class="screen results-screen" id="s4">
+            <div class="results-header">
+                <div class="results-emoji">🎉</div>
+                <div class="results-title">4 out of 5!</div>
+                <div class="results-match">You matched on most questions</div>
+            </div>
+            <div class="lp-banner">
+                <span style="font-size:20px">✨</span>
+                <span class="lp-text">+30 Love Points</span>
+                <span style="font-size:20px">✨</span>
+            </div>
+            <div class="results-list">
+                <div class="result-item">
+                    <div class="result-question">"What does your partner value most?"</div>
+                    <div class="result-answers">
+                        <div class="result-answer">
+                            <div class="result-name">Joakim</div>
+                            <div class="result-value">Quality time</div>
+                        </div>
+                        <div class="result-match-icon">✅</div>
+                        <div class="result-answer">
+                            <div class="result-name">Taija</div>
+                            <div class="result-value">Quality time</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-question">"Your ideal weekend together?"</div>
+                    <div class="result-answers">
+                        <div class="result-answer">
+                            <div class="result-name">Joakim</div>
+                            <div class="result-value">Outdoor hike</div>
+                        </div>
+                        <div class="result-match-icon">✅</div>
+                        <div class="result-answer">
+                            <div class="result-name">Taija</div>
+                            <div class="result-value">Outdoor hike</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-question">"How do you handle disagreements?"</div>
+                    <div class="result-answers">
+                        <div class="result-answer">
+                            <div class="result-name">Joakim</div>
+                            <div class="result-value">Talk it out</div>
+                        </div>
+                        <div class="result-match-icon">❌</div>
+                        <div class="result-answer">
+                            <div class="result-name">Taija</div>
+                            <div class="result-value">Cool off first</div>
+                        </div>
+                    </div>
+                    <div class="discuss-prompt">💬 You disagreed — talk about this one!</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-question">"What makes you feel most loved?"</div>
+                    <div class="result-answers">
+                        <div class="result-answer">
+                            <div class="result-name">Joakim</div>
+                            <div class="result-value">Words</div>
+                        </div>
+                        <div class="result-match-icon">✅</div>
+                        <div class="result-answer">
+                            <div class="result-name">Taija</div>
+                            <div class="result-value">Words</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-question">"Your dream vacation?"</div>
+                    <div class="result-answers">
+                        <div class="result-answer">
+                            <div class="result-name">Joakim</div>
+                            <div class="result-value">Beach resort</div>
+                        </div>
+                        <div class="result-match-icon">✅</div>
+                        <div class="result-answer">
+                            <div class="result-name">Taija</div>
+                            <div class="result-value">Beach resort</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="results-bottom">
+                <button class="play-btn" style="max-width:100%" onclick="goTo(0)">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const questions = [
+            { q: "What does your partner value most in your relationship?", a: ["Quality time together", "Open communication", "Physical affection", "Acts of kindness"] },
+            { q: "Your ideal weekend together?", a: ["Outdoor hike", "Netflix & couch", "Dinner date", "Road trip"] },
+            { q: "How do you handle disagreements?", a: ["Talk it out calmly", "Cool off first", "Write it down", "Humor defuses it"] },
+            { q: "What makes you feel most loved?", a: ["Words of affirmation", "Physical touch", "Surprise gifts", "Quality time"] },
+            { q: "Your dream vacation as a couple?", a: ["Beach resort", "Mountain cabin", "European city", "Safari adventure"] },
+        ];
+        let p1Q = 0, p2Q = 0;
+        const labels = ['Intro', 'Joakim plays', 'Handoff', 'Taija plays', 'Results'];
+
+        function goTo(screen) {
+            const prev = document.getElementById('s' + currentScreen);
+            const next = document.getElementById('s' + screen);
+            prev.classList.remove('active');
+            prev.classList.add('exit-left');
+            setTimeout(() => prev.classList.remove('exit-left'), 500);
+            next.classList.add('active');
+            currentScreen = screen;
+
+            // Update flow indicator
+            for (let i = 0; i < 5; i++) {
+                const fs = document.getElementById('fs' + i);
+                fs.classList.remove('active', 'done');
+                if (i < screen) fs.classList.add('done');
+                if (i === screen) fs.classList.add('active');
+            }
+            document.getElementById('flowLabel').textContent = labels[screen];
+
+            // Reset question state for game screens
+            if (screen === 1) { p1Q = 0; loadQuestion(1, 0); }
+            if (screen === 3) { p2Q = 0; loadQuestion(2, 0); }
+        }
+
+        function loadQuestion(player, qIdx) {
+            const prefix = player === 1 ? 'p1' : 'p2';
+            document.getElementById(prefix + 'Question').textContent = questions[qIdx].q;
+            document.getElementById(prefix + 'Counter').textContent = (qIdx + 1) + ' / 5';
+            const container = document.getElementById(prefix + 'Answers');
+            container.innerHTML = '';
+            questions[qIdx].a.forEach(a => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = a;
+                btn.onclick = () => selectAnswer(player, btn);
+                container.appendChild(btn);
+            });
+            document.getElementById(prefix + 'Next').disabled = true;
+
+            // Update dots
+            const dots = document.getElementById(prefix + 'Dots');
+            dots.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const d = document.createElement('div');
+                d.className = 'dot' + (i < qIdx ? ' filled' : '') + (i === qIdx ? ' current' : '');
+                dots.appendChild(d);
+            }
+
+            // Update button text
+            const nextBtn = document.getElementById(prefix + 'Next');
+            nextBtn.textContent = qIdx === 4 ? 'Submit' : 'Next';
+        }
+
+        function selectAnswer(player, btn) {
+            const prefix = player === 1 ? 'p1' : 'p2';
+            document.querySelectorAll('#' + prefix + 'Answers .answer-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById(prefix + 'Next').disabled = false;
+        }
+
+        function nextQuestion(player) {
+            if (player === 1) {
+                p1Q++;
+                if (p1Q >= 5) { goTo(2); return; }
+                loadQuestion(1, p1Q);
+            } else {
+                p2Q++;
+                if (p2Q >= 5) { goTo(4); return; }
+                loadQuestion(2, p2Q);
+            }
+        }
+
+        // Init
+        loadQuestion(1, 0);
+        loadQuestion(2, 0);
+    </script>
+</body>
+</html>

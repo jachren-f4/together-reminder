@@ -11,13 +11,16 @@ import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/services/steps_health_service.dart';
+import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/config/app_version.dart';
+import 'package:togetherremind/services/play_mode_service.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
+import 'pairing_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -47,12 +50,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _todaySteps = 0;
   bool _loadingSteps = false;
 
+  // Notifications
+  bool _notificationsEnabled = false;
+  bool _loadingNotifications = false;
+
   @override
   void initState() {
     super.initState();
     _loadPreferences();
     _loadSoundHapticPreferences();
     _loadStepsData();
+    _loadNotificationStatus();
+  }
+
+  Future<void> _loadNotificationStatus() async {
+    if (kIsWeb) return;
+    final isAuthorized = await NotificationService.isAuthorized();
+    if (mounted) {
+      setState(() => _notificationsEnabled = isAuthorized);
+    }
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (_notificationsEnabled) return; // Already enabled
+
+    setState(() => _loadingNotifications = true);
+    try {
+      final granted = await NotificationService.requestPermission();
+      if (mounted) {
+        setState(() {
+          _notificationsEnabled = granted;
+          _loadingNotifications = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loadingNotifications = false);
+      }
+    }
   }
 
   Future<void> _loadStepsData() async {
@@ -724,6 +759,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
 
+              // Notifications Section (not on web)
+              if (!kIsWeb)
+                _buildUs2SettingsGroup(
+                  title: 'NOTIFICATIONS',
+                  children: [
+                    _buildUs2NotificationRow(),
+                  ],
+                ),
+
               // Games Section
               if (user != null && partner != null)
                 _buildUs2SettingsGroup(
@@ -732,6 +776,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildUs2PickerSection(user, partner),
                   ],
                 ),
+
+              // Two-Device Mode section (only for phantom partner)
+              if (PlayModeService().isPhantomPartner)
+                _buildUs2TwoDeviceModeSection(),
+
+              // Play Mode section (only for real partners - after pairing)
+              if (user != null && partner != null && !PlayModeService().isPhantomPartner)
+                _buildUs2PlayModeSection(partner),
 
               // Steps Section (iOS only)
               if (!kIsWeb && Platform.isIOS)
@@ -777,6 +829,357 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2TwoDeviceModeSection() {
+    final partnerName = PlayModeService().partnerName;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 0, 8),
+            child: Text(
+              'TWO-DEVICE MODE',
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PairingScreen(fromSettings: true),
+                ),
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: const Border(
+                  left: BorderSide(color: Color(0xFFFF5E62), width: 3),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.devices, size: 20, color: Us2Theme.textMedium),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Set up $partnerName's phone",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Us2Theme.textDark,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  gradient: Us2Theme.accentGradient,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'NEW',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Play anytime, send pokes, track steps',
+                            style: GoogleFonts.nunito(
+                              fontSize: 12,
+                              color: Us2Theme.textMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '\u203A',
+                      style: TextStyle(fontSize: 18, color: Us2Theme.textLight),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+            child: Text(
+              "Your progress and history will sync to $partnerName's device",
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                color: Us2Theme.textLight,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2PlayModeSection(partner) {
+    final currentMode = PlayModeService().playMode;
+    final modeName = currentMode == PlayMode.singlePhone
+        ? 'Same phone'
+        : 'Separate phones';
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 0, 8),
+            child: Row(
+              children: [
+                Text(
+                  'PLAY MODE',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0x1A22C55E),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'AFTER PAIRING',
+                    style: GoogleFonts.nunito(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF22C55E),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _showPlayModePicker(partner),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.smartphone, size: 20, color: Us2Theme.textMedium),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Play mode',
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Us2Theme.textDark,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'How you and ${partner.name} play games',
+                            style: GoogleFonts.nunito(
+                              fontSize: 12,
+                              color: Us2Theme.textMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      modeName,
+                      style: GoogleFonts.nunito(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '\u203A',
+                      style: TextStyle(fontSize: 18, color: Us2Theme.textLight),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPlayModePicker(partner) {
+    final currentMode = PlayModeService().playMode;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Play Mode',
+          style: GoogleFonts.playfairDisplay(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Us2Theme.textDark,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'How do you and ${partner.name} want to play?',
+              style: GoogleFonts.nunito(
+                fontSize: 15,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildPlayModeOption(
+              label: 'Separate phones',
+              description: 'Play on your own time, each on your own device',
+              icon: Icons.devices,
+              isSelected: currentMode == PlayMode.separatePhones,
+              onTap: () {
+                PlayModeService().setPlayMode(PlayMode.separatePhones);
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 12),
+            _buildPlayModeOption(
+              label: 'Same phone',
+              description: 'Pass the phone between turns',
+              icon: Icons.smartphone,
+              isSelected: currentMode == PlayMode.singlePhone,
+              onTap: () {
+                PlayModeService().setPlayMode(PlayMode.singlePhone);
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlayModeOption({
+    required String label,
+    required String description,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: isSelected ? Us2Theme.accentGradient : null,
+          color: isSelected ? null : Colors.white,
+          border: isSelected ? null : Border.all(color: Us2Theme.beige, width: 2),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 24,
+              color: isSelected ? Colors.white : Us2Theme.textMedium,
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: GoogleFonts.nunito(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected ? Colors.white : Us2Theme.textDark,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      color: isSelected
+                          ? Colors.white.withOpacity(0.8)
+                          : Us2Theme.textLight,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle, size: 20, color: Colors.white),
+          ],
         ),
       ),
     );
@@ -1008,6 +1411,91 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUs2NotificationRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Push Notifications',
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _notificationsEnabled
+                      ? 'Enabled - you\'ll receive pokes and reminders'
+                      : 'Tap to enable notifications',
+                  style: GoogleFonts.nunito(
+                    fontSize: 12,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_loadingNotifications)
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Us2Theme.primaryBrandPink,
+              ),
+            )
+          else if (_notificationsEnabled)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F5E9),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.check, size: 14, color: Color(0xFF388E3C)),
+                  const SizedBox(width: 4),
+                  Text(
+                    'ON',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF388E3C),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            GestureDetector(
+              onTap: _requestNotificationPermission,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: Us2Theme.accentGradient,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Enable',
+                  style: GoogleFonts.nunito(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

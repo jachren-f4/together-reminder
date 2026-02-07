@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 Single-Phone Variant - Mockups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 42px;
+            color: #E85A6B;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #6B6B6B;
+            font-size: 16px;
+            margin-bottom: 48px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+        .section-desc {
+            color: #6B6B6B;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-left: 4px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2);
+        }
+        .card-emoji { font-size: 36px; }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+        .card-desc {
+            font-size: 13px;
+            color: #6B6B6B;
+            line-height: 1.5;
+        }
+        .card-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+        .tag-new { background: #FFE8E8; color: #FF5E62; }
+        .tag-changed { background: #FFF3E0; color: #F5A623; }
+        .tag-interactive { background: #E8F5E9; color: #4CAF50; }
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,107,107,0.2), transparent);
+            margin: 8px 0 32px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Us 2.0</h1>
+        <p class="subtitle">Single-Phone Variant Mockups</p>
+
+        <div class="section-title">New Screens</div>
+        <div class="section-desc">Screens that replace the two-device pairing flow</div>
+        <div class="grid">
+            <a href="partner-name-entry.html" class="card">
+                <div class="card-emoji">👫</div>
+                <span class="card-tag tag-new">NEW</span>
+                <div class="card-title">Partner Name Entry</div>
+                <div class="card-desc">Replaces the pairing code screen. Enter your partner's name to get started.</div>
+            </a>
+            <a href="handoff-screen.html" class="card">
+                <div class="card-emoji">🔄</div>
+                <span class="card-tag tag-new">NEW</span>
+                <div class="card-title">Handoff Screen</div>
+                <div class="card-desc">The core new UX element. The moment you pass the phone.</div>
+            </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Full Game Flows</div>
+        <div class="section-desc">Tap through complete game sessions to feel the single-phone experience</div>
+        <div class="grid">
+            <a href="quiz-flow.html" class="card">
+                <div class="card-emoji">🧠</div>
+                <span class="card-tag tag-interactive">INTERACTIVE FLOW</span>
+                <div class="card-title">Classic Quiz</div>
+                <div class="card-desc">Intro &rarr; Player 1 answers &rarr; Handoff &rarr; Player 2 answers &rarr; Instant results</div>
+            </a>
+            <a href="you-or-me-flow.html" class="card">
+                <div class="card-emoji">🫵</div>
+                <span class="card-tag tag-interactive">INTERACTIVE FLOW</span>
+                <div class="card-title">You or Me</div>
+                <div class="card-desc">Dilemma cards with pass-the-phone handoff and instant reveal</div>
+            </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Modified Screens</div>
+        <div class="section-desc">Existing screens adapted for single-phone mode</div>
+        <div class="grid">
+            <a href="home-screen.html" class="card">
+                <div class="card-emoji">🏠</div>
+                <span class="card-tag tag-changed">CHANGED</span>
+                <div class="card-title">Home Screen</div>
+                <div class="card-desc">Simplified quest cards with "Play Together" buttons. No partner status badges.</div>
+            </a>
+            <a href="upgrade-prompt.html" class="card">
+                <div class="card-emoji">📱</div>
+                <span class="card-tag tag-changed">CHANGED</span>
+                <div class="card-title">Upgrade to Two Devices</div>
+                <div class="card-desc">Steps Together locked slot + settings upgrade flow</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -344,24 +344,32 @@ class YouOrMeApiService {
   ///
   /// [sessionId] - The session ID
   /// [answer] - Single answer object
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<YouOrMeSubmitResult> submitAnswer({
     required String sessionId,
     required YouOrMeAnswer answer,
+    String? onBehalfOf,
   }) async {
     try {
+      final body = <String, dynamic>{
+        'sessionId': sessionId,
+        'answer': {
+          'questionId': answer.questionId,
+          'questionPrompt': answer.questionPrompt,
+          'questionContent': answer.questionContent,
+          'answerValue': answer.answerValue,
+          'answeredAt': answer.answeredAt.toIso8601String(),
+        },
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await _apiRequest(
         'POST',
         '/api/sync/you-or-me/submit',
-        body: {
-          'sessionId': sessionId,
-          'answer': {
-            'questionId': answer.questionId,
-            'questionPrompt': answer.questionPrompt,
-            'questionContent': answer.questionContent,
-            'answerValue': answer.answerValue,
-            'answeredAt': answer.answeredAt.toIso8601String(),
-          },
-        },
+        body: body,
       );
 
       return YouOrMeSubmitResult.fromJson(response);
@@ -376,26 +384,34 @@ class YouOrMeApiService {
   ///
   /// [sessionId] - The session ID
   /// [answers] - List of answer objects
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<YouOrMeSubmitResult> submitAnswers({
     required String sessionId,
     required List<YouOrMeAnswer> answers,
+    String? onBehalfOf,
   }) async {
     try {
+      final body = <String, dynamic>{
+        'sessionId': sessionId,
+        'answers': answers
+            .map((a) => {
+                  'questionId': a.questionId,
+                  'questionPrompt': a.questionPrompt,
+                  'questionContent': a.questionContent,
+                  'answerValue': a.answerValue,
+                  'answeredAt': a.answeredAt.toIso8601String(),
+                })
+            .toList(),
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await _apiRequest(
         'POST',
         '/api/sync/you-or-me/submit',
-        body: {
-          'sessionId': sessionId,
-          'answers': answers
-              .map((a) => {
-                    'questionId': a.questionId,
-                    'questionPrompt': a.questionPrompt,
-                    'questionContent': a.questionContent,
-                    'answerValue': a.answerValue,
-                    'answeredAt': a.answeredAt.toIso8601String(),
-                  })
-              .toList(),
-        },
+        body: body,
       );
 
       return YouOrMeSubmitResult.fromJson(response);

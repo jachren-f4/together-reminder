@@ -18,6 +18,23 @@
 
 ---
 
+## Configuration
+
+Game settings are centralized in matching config files:
+
+| Setting | Flutter | API | Default | Range |
+|---------|---------|-----|---------|-------|
+| Rack Size | `LinkedConstants.rackSize` | `LINKED_CONFIG.RACK_SIZE` | 5 | 5-7 |
+| Starting Hints | `LinkedConstants.startingHints` | `LINKED_CONFIG.STARTING_HINTS` | 2 | 1-5 |
+
+**Files:**
+- Flutter: `lib/config/linked_constants.dart`
+- API: `api/lib/linked/config.ts`
+
+**IMPORTANT:** These files must stay in sync when changing values.
+
+---
+
 ## Architecture Overview
 
 ```

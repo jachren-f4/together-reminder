@@ -33,6 +33,44 @@ class _WorthDiscussingCardState extends State<WorthDiscussingCard> {
   static const Color _textMedium = Color(0xFF5A5A5A);
   static const Color _textLight = Color(0xFF8A8A8A);
 
+  /// Convert category key to human-readable display name
+  static String _formatCategoryName(String category) {
+    // Map of known category keys to display names
+    const categoryNames = {
+      'security_threats': 'Security',
+      'security_sources': 'Security',
+      'insecurity_soothing': 'Comfort',
+      'vulnerability_safety': 'Vulnerability',
+      'safety_expression': 'Safety',
+      'values': 'Values',
+      'future': 'Future',
+      'family': 'Family',
+      'money': 'Money',
+      'communication': 'Communication',
+      'emotional': 'Emotional',
+      'conflict': 'Conflict',
+      'intimacy': 'Intimacy',
+      'lifestyle': 'Lifestyle',
+      'entertainment': 'Entertainment',
+      'social': 'Social',
+      'daily_life': 'Daily Life',
+    };
+
+    final key = category.toLowerCase();
+    if (categoryNames.containsKey(key)) {
+      return categoryNames[key]!.toUpperCase();
+    }
+    // Fallback: convert snake_case to Title Case
+    return category
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.isNotEmpty
+            ? '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}'
+            : '')
+        .join(' ')
+        .toUpperCase();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -121,7 +159,7 @@ class _WorthDiscussingCardState extends State<WorthDiscussingCard> {
         // Category label
         if (widget.discovery.category != null)
           Text(
-            widget.discovery.category!.toUpperCase(),
+            _formatCategoryName(widget.discovery.category!),
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,

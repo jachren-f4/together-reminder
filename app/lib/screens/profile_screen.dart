@@ -19,7 +19,9 @@ import '../models/couple_subscription_status.dart';
 import '../services/magnet_service.dart';
 import '../screens/magnet_collection_screen.dart';
 import 'paywall_screen.dart';
+import 'pairing_screen.dart';
 import 'us_profile_screen.dart';
+import '../services/play_mode_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -81,6 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildUs2TogetherForSection(),
                   const SizedBox(height: 20),
                   _buildUs2YourActivitySection(),
+                  if (PlayModeService().isPhantomPartner) ...[
+                    const SizedBox(height: 20),
+                    _buildUs2UpgradeNudge(),
+                  ],
                   const SizedBox(height: 20),
                   _buildUs2SubscriptionSection(),
                   const SizedBox(height: 32),
@@ -1855,6 +1861,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  /// Us2 Upgrade Nudge Card (shown when partner is phantom)
+  Widget _buildUs2UpgradeNudge() {
+    final partnerName = PlayModeService().partnerName;
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PairingScreen(fromSettings: true),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          border: const Border(
+            left: BorderSide(color: Color(0xFFFF5E62), width: 3),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          child: Row(
+            children: [
+              Icon(Icons.devices, size: 20, color: Us2Theme.textMedium),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Set up $partnerName's phone",
+                      style: GoogleFonts.nunito(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Play anytime, send pokes, track steps',
+                      style: GoogleFonts.nunito(
+                        fontSize: 12,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '\u203A',
+                style: TextStyle(fontSize: 18, color: Us2Theme.textLight),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Us2 Subscription Section
   Widget _buildUs2SubscriptionSection() {
     final subscriptionService = SubscriptionService();
@@ -2153,9 +2227,9 @@ class _AnniversaryDatePickerState extends State<_AnniversaryDatePicker> {
               ),
             ),
             const SizedBox(height: 24),
-            // Date picker
+            // Date picker - increased height for better visibility
             SizedBox(
-              height: 200,
+              height: 320,
               child: CalendarDatePicker(
                 initialDate: _selectedDate,
                 firstDate: DateTime(1900),

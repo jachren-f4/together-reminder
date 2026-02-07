@@ -46,8 +46,13 @@ import 'quiz_match_game_screen.dart';
 import 'quiz_match_waiting_screen.dart';
 import 'quiz_intro_screen.dart';
 import 'affirmation_intro_screen.dart';
+import 'you_or_me_match_game_screen.dart';
 import 'you_or_me_match_intro_screen.dart';
 import 'game_waiting_screen.dart';
+import '../services/play_mode_service.dart';
+import '../widgets/together/together_handoff_screen.dart';
+import '../widgets/together/upgrade_prompt_popup.dart';
+import 'pairing_screen.dart';
 import 'quiz_match_results_screen.dart';
 import 'you_or_me_match_results_screen.dart';
 import '../services/quiz_match_service.dart';
@@ -576,6 +581,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     final bothCompleted = quest.isCompleted;
     final waitingForPartner = userCompleted && !bothCompleted;
 
+    // Together mode: if P1 answered and P2 hasn't, navigate to handoff → P2 game
+    final isSinglePhone = PlayModeService().isSinglePhone;
+    if (isSinglePhone && waitingForPartner) {
+      _navigateToTogetherHandoff(quest);
+      return;
+    }
+
     // Track LP before navigating to daily quests (for Us 2.0 celebration)
     final isDailyQuest = quest.type == QuestType.quiz || quest.type == QuestType.youOrMe;
     if (isDailyQuest && BrandWidgetFactory.isUs2) {
@@ -836,6 +848,77 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   void _navigateToSteps() {
     // Note: Guard is at entry point (_navigateToQuest), not here
     _handleStepsQuestTap();
+  }
+
+  /// Navigate to together-mode handoff then P2 game screen.
+  /// Called when quest card shows "PASS TO [PARTNER]" and is tapped.
+  void _navigateToTogetherHandoff(DailyQuest quest) {
+    final partnerName = PlayModeService().partnerName;
+    final phantomUserId = PlayModeService().phantomUserId;
+
+    // Track LP for celebration
+    if (BrandWidgetFactory.isUs2) {
+      _lpBeforeQuest = _arenaService.getLovePoints();
+      _navigatedToDailyQuest = true;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TogetherHandoffScreen(
+          partnerName: partnerName,
+          onReady: () {
+            Navigator.pop(context); // Pop handoff
+            // Navigate to P2 game screen
+            switch (quest.type) {
+              case QuestType.quiz:
+                final quizType = quest.formatType == 'affirmation' ? 'affirmation' : 'classic';
+                final contentType = quest.formatType == 'affirmation' ? 'affirmation_quiz' : 'classic_quiz';
+                final pendingMatchId = _storage.getPendingResultsMatchId(contentType);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => QuizMatchGameScreen(
+                      quizType: quizType,
+                      isSecondPlayer: true,
+                      onBehalfOfUserId: phantomUserId,
+                      matchId: pendingMatchId,
+                    ),
+                  ),
+                );
+                break;
+              case QuestType.youOrMe:
+                final pendingMatchId = _storage.getPendingResultsMatchId('you_or_me');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => YouOrMeMatchGameScreen(
+                      isSecondPlayer: true,
+                      onBehalfOfUserId: phantomUserId,
+                      matchId: pendingMatchId,
+                    ),
+                  ),
+                );
+                break;
+              case QuestType.linked:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LinkedGameScreen()),
+                );
+                break;
+              case QuestType.wordSearch:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const WordSearchGameScreen()),
+                );
+                break;
+              default:
+                break;
+            }
+          },
+        ),
+      ),
+    );
   }
 
   Future<void> _refreshFromFirebase() async {
@@ -1863,6 +1946,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   /// Handle Steps Together card tap - navigate based on connection state
   Future<void> _handleStepsQuestTap() async {
+    // Phantom partner: show upgrade prompt instead of steps
+    if (PlayModeService().isPhantomPartner) {
+      final partnerName = PlayModeService().partnerName;
+      await showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.35),
+        builder: (ctx) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: UpgradePromptPopup(
+              icon: Icons.directions_run,
+              title: 'Track steps together!',
+              description:
+                  "Set up $partnerName's phone to count both your steps and reach daily goals as a couple.",
+              onSetUpPhone: () {
+                Navigator.pop(ctx);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PairingScreen(fromSettings: true),
+                  ),
+                );
+              },
+              onDismiss: () => Navigator.pop(ctx),
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
     final stepsService = StepsFeatureService();
     final state = stepsService.getCurrentState();
 

@@ -199,7 +199,7 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string) 
       entries.push({
         entryId: `linked_${row.id}`,
         type: 'linked',
-        title: 'Linked',
+        title: 'Crossword',
         completedAt: row.completed_at,
         contentId: row.id,
         userScore: isPlayer1 ? row.player1_score : row.player2_score,

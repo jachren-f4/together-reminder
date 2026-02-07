@@ -5,6 +5,7 @@ import 'storage_service.dart';
 import 'api_client.dart';
 import 'linked_service.dart';
 import 'word_search_service.dart';
+import 'play_mode_service.dart';
 
 /// Unified polling service for the home screen
 ///
@@ -219,6 +220,12 @@ class HomePollingService extends ChangeNotifier {
 
   /// Poll daily quest completion status
   Future<bool> _pollDailyQuests() async {
+    // Skip partner-state polling when phantom partner — the phantom can never
+    // independently complete a quest; all completions happen on this device.
+    if (PlayModeService().isPhantomPartner) {
+      return false;
+    }
+
     final user = _storage.getUser();
     final partner = _storage.getPartner();
 
@@ -374,6 +381,9 @@ class HomePollingService extends ChangeNotifier {
 
   /// Poll Linked game state
   Future<bool> _pollLinkedGame() async {
+    // Skip polling in single-phone mode — turns happen locally
+    if (PlayModeService().isSinglePhone) return false;
+
     final linkedMatch = _storage.getActiveLinkedMatch();
 
     Logger.debug(
@@ -457,6 +467,9 @@ class HomePollingService extends ChangeNotifier {
 
   /// Poll Word Search game state
   Future<bool> _pollWordSearchGame() async {
+    // Skip polling in single-phone mode — turns happen locally
+    if (PlayModeService().isSinglePhone) return false;
+
     final wsMatch = _storage.getActiveWordSearchMatch();
 
     Logger.debug(

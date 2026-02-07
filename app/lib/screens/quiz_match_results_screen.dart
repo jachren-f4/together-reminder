@@ -9,6 +9,7 @@ import '../models/quiz_match.dart';
 import '../services/storage_service.dart';
 import '../services/unlock_service.dart';
 import '../services/quiz_match_service.dart';
+import '../services/play_mode_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/unlock_popup.dart';
@@ -883,15 +884,22 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
                             final partnerAnswer = index < partnerAnswers.length ? partnerAnswers[index] : -1;
                             final isMatch = userAnswer == partnerAnswer && userAnswer >= 0;
 
-                            return _buildUs2QuestionCard(
-                              questionNumber: index + 1,
-                              questionText: question.text,
-                              choices: question.choices,
-                              userAnswer: userAnswer,
-                              partnerAnswer: partnerAnswer,
-                              userName: userName,
-                              partnerName: partnerName,
-                              isMatch: isMatch,
+                            return Column(
+                              children: [
+                                _buildUs2QuestionCard(
+                                  questionNumber: index + 1,
+                                  questionText: question.text,
+                                  choices: question.choices,
+                                  userAnswer: userAnswer,
+                                  partnerAnswer: partnerAnswer,
+                                  userName: userName,
+                                  partnerName: partnerName,
+                                  isMatch: isMatch,
+                                ),
+                                // "Discuss this!" prompt for differing answers in together mode
+                                if (!isMatch && PlayModeService().isSinglePhone)
+                                  _buildDiscussPrompt(),
+                              ],
                             );
                           }),
 
@@ -1162,6 +1170,50 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
           ),
         ),
       ],
+    );
+  }
+
+  /// Build "Discuss this!" prompt for together mode
+  Widget _buildDiscussPrompt() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFF9F43).withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.forum,
+            color: Color(0xFFFF9F43),
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Discuss this!',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFFFF9F43),
+                  ),
+                ),
+                Text(
+                  "You're both here \u2014 talk about it!",
+                  style: GoogleFonts.nunito(
+                    fontSize: 12,
+                    color: const Color(0xFF5A5A5A),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

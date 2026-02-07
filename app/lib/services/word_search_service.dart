@@ -95,22 +95,30 @@ class WordSearchService extends SideQuestServiceBase {
   /// Submit a found word
   ///
   /// Returns result with validation status, points, and turn state
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<WordSearchSubmitResult> submitWord({
     required String matchId,
     required String word,
     required List<GridPosition> positions,
+    String? onBehalfOf,
   }) async {
     try {
       final positionsJson = positions.map((p) => p.toJson()).toList();
 
+      final body = <String, dynamic>{
+        'matchId': matchId,
+        'word': word.toUpperCase(),
+        'positions': positionsJson,
+      };
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
+      }
+
       final response = await apiRequest(
         'POST',
         '/api/sync/word-search/submit',
-        body: {
-          'matchId': matchId,
-          'word': word.toUpperCase(),
-          'positions': positionsJson,
-        },
+        body: body,
       );
 
       return WordSearchSubmitResult.fromJson(response);

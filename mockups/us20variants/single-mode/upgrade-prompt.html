@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Upgrade to Two-Device Mode Prompt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --pink: #FF5E62;
+            --grad-start: #FF6B6B;
+            --grad-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #3A3A3A;
+            --text-med: #5A5A5A;
+            --text-light: #707070;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: #F0E6E0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 24px;
+        }
+
+        /* Tab bar outside phone */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 14px;
+            padding: 4px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .tab {
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-med);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+        .tab:hover:not(.active) {
+            background: rgba(255,94,98,0.08);
+        }
+
+        /* Phone frame */
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .status-bar {
+            height: 54px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           SCENE 1: Poke Screen (Behind popup)
+           ============================================ */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .scene.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Shared behind-screen styling */
+        .behind-screen {
+            width: 100%;
+            height: 100%;
+            filter: blur(2px);
+            opacity: 0.4;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .dim-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 1;
+        }
+
+        /* Poke screen behind */
+        .poke-behind {
+            padding: 54px 24px 0;
+        }
+        .poke-behind .screen-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+        .poke-behind .screen-subtitle {
+            font-size: 14px;
+            color: var(--text-med);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .poke-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 0 8px;
+        }
+        .poke-icon-item {
+            background: white;
+            border-radius: 16px;
+            height: 76px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .poke-icon-item .poke-icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .poke-icon-item .poke-icon-circle .material-icons-round {
+            font-size: 20px;
+            color: white;
+        }
+        .poke-icon-item .label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* Steps screen behind */
+        .steps-behind {
+            padding: 54px 24px 0;
+        }
+        .steps-behind .screen-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 16px;
+            margin-bottom: 32px;
+        }
+        .step-ring-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .step-ring {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 12px solid var(--beige);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.5);
+        }
+        .step-ring .step-count {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .step-ring .step-label {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .step-ring .step-goal {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        .steps-users-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+        .steps-user {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .steps-user .mini-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+        .steps-user .mini-avatar.user-av {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+        }
+        .steps-user .mini-avatar.partner-av {
+            background: linear-gradient(135deg, #6C9CE9, #45B7D1);
+        }
+        .steps-user .user-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .steps-user .user-steps {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* Settings screen (no popup, full content) */
+        .settings-scene {
+            padding: 54px 0 0;
+            overflow-y: auto;
+        }
+        .settings-scene .screen-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            padding: 16px 24px 20px;
+        }
+        .settings-content {
+            padding: 0 20px 40px;
+        }
+        .settings-section-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 4px;
+            margin-bottom: 8px;
+            margin-top: 24px;
+        }
+        .settings-section-label:first-child {
+            margin-top: 0;
+        }
+        .settings-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .settings-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+        .settings-row .row-icon {
+            font-size: 20px;
+            margin-right: 14px;
+            width: 28px;
+            text-align: center;
+            color: var(--text-med);
+        }
+        .settings-row .row-content {
+            flex: 1;
+        }
+        .settings-row .row-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .settings-row .row-subtitle {
+            font-size: 12px;
+            color: var(--text-med);
+            margin-top: 2px;
+        }
+        .settings-row .row-chevron {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-left: 8px;
+        }
+        .two-device-card {
+            border-left: 3px solid var(--pink);
+        }
+        .settings-info-text {
+            font-size: 12px;
+            color: var(--text-light);
+            padding: 8px 4px 0;
+            line-height: 1.4;
+        }
+
+        /* ============================================
+           POPUP
+           ============================================ */
+        .popup-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 24px;
+        }
+        .popup-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px 24px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 340px;
+            transform: scale(0.85);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+        .scene.active .popup-card {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .popup-icon {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .popup-icon .material-icons-round {
+            font-size: 48px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .popup-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .popup-desc {
+            font-size: 14px;
+            color: var(--text-med);
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .popup-benefits {
+            list-style: none;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+        .popup-benefits li {
+            font-size: 13px;
+            color: var(--text-dark);
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .popup-benefits li .benefit-icon {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+            color: var(--grad-start);
+        }
+        .popup-benefits li .benefit-icon .material-icons-round {
+            font-size: 18px;
+        }
+        .popup-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 12px;
+        }
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255,107,107,0.4);
+        }
+        .popup-btn:active {
+            transform: translateY(0);
+        }
+        .popup-dismiss {
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-light);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+        .popup-dismiss:hover {
+            color: var(--text-med);
+        }
+    </style>
+</head>
+<body>
+    <!-- Tab bar -->
+    <div class="tab-bar">
+        <button class="tab active" data-tab="poke">From Poke</button>
+        <button class="tab" data-tab="steps">From Steps</button>
+        <button class="tab" data-tab="settings">From Settings</button>
+    </div>
+
+    <!-- Phone frame -->
+    <div class="phone">
+
+        <!-- ===== Scene 1: Poke ===== -->
+        <div class="scene active" id="scene-poke">
+            <!-- Behind screen (dimmed poke grid) -->
+            <div class="behind-screen poke-behind">
+                <div class="screen-title">Send a Poke</div>
+                <div class="screen-subtitle">Tap an icon to poke Taija</div>
+                <div class="poke-icon-grid">
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">waving_hand</span></div><span class="label">Wave</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">favorite</span></div><span class="label">Kiss</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">self_improvement</span></div><span class="label">Hug</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">favorite_border</span></div><span class="label">Hearts</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">favorite</span></div><span class="label">Love</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">local_fire_department</span></div><span class="label">Fire</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">sentiment_satisfied</span></div><span class="label">Wink</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">mood</span></div><span class="label">Adore</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">sentiment_very_satisfied</span></div><span class="label">Silly</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">favorite</span></div><span class="label">Smooch</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">sentiment_satisfied</span></div><span class="label">Cool</span></div>
+                    <div class="poke-icon-item"><div class="poke-icon-circle"><span class="material-icons-round">favorite</span></div><span class="label">Love</span></div>
+                </div>
+            </div>
+            <div class="dim-overlay"></div>
+
+            <!-- Popup -->
+            <div class="popup-container">
+                <div class="popup-card">
+                    <div class="popup-icon"><span class="material-icons-round">devices</span></div>
+                    <div class="popup-title">Poke Taija anytime!</div>
+                    <div class="popup-desc">Set up Taija's phone so you can send pokes, play anytime, and get notifications.</div>
+                    <ul class="popup-benefits">
+                        <li><span class="benefit-icon"><span class="material-icons-round">waving_hand</span></span> Send pokes & reminders</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">schedule</span></span> Play quizzes anytime, anywhere</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">notifications</span></span> Get notified when results are ready</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">directions_run</span></span> Track steps together</li>
+                    </ul>
+                    <button class="popup-btn">Set Up Taija's Phone</button>
+                    <button class="popup-dismiss">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Scene 2: Steps ===== -->
+        <div class="scene" id="scene-steps">
+            <!-- Behind screen (dimmed steps view) -->
+            <div class="behind-screen steps-behind">
+                <div class="screen-title">Steps Together</div>
+                <div class="step-ring-container">
+                    <div class="step-ring">
+                        <div class="step-count">--</div>
+                        <div class="step-label">combined steps</div>
+                        <div class="step-goal">Goal: 10,000</div>
+                    </div>
+                </div>
+                <div class="steps-users-row">
+                    <div class="steps-user">
+                        <div class="mini-avatar user-av">J</div>
+                        <div class="user-name">Joakim</div>
+                        <div class="user-steps">3,241 steps</div>
+                    </div>
+                    <div class="steps-user">
+                        <div class="mini-avatar partner-av">T</div>
+                        <div class="user-name">Taija</div>
+                        <div class="user-steps">-- steps</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dim-overlay"></div>
+
+            <!-- Popup -->
+            <div class="popup-container">
+                <div class="popup-card">
+                    <div class="popup-icon"><span class="material-icons-round">directions_run</span></div>
+                    <div class="popup-title">Track steps together!</div>
+                    <div class="popup-desc">Set up Taija's phone to count both your steps and reach daily goals as a couple.</div>
+                    <ul class="popup-benefits">
+                        <li><span class="benefit-icon"><span class="material-icons-round">waving_hand</span></span> Send pokes & reminders</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">schedule</span></span> Play quizzes anytime, anywhere</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">notifications</span></span> Get notified when results are ready</li>
+                        <li><span class="benefit-icon"><span class="material-icons-round">directions_run</span></span> Track steps together</li>
+                    </ul>
+                    <button class="popup-btn">Set Up Taija's Phone</button>
+                    <button class="popup-dismiss">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Scene 3: Settings ===== -->
+        <div class="scene" id="scene-settings">
+            <div class="settings-scene">
+                <div class="screen-title">Settings</div>
+                <div class="settings-content">
+                    <!-- Game Settings -->
+                    <div class="settings-section-label">Game Settings</div>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">track_changes</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Who goes first</div>
+                            </div>
+                            <span style="font-size: 14px; color: var(--text-med); font-weight: 600;">Joakim</span>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">volume_up</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Sound effects</div>
+                            </div>
+                            <div class="toggle on"><div class="toggle-knob"></div></div>
+                        </div>
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">vibration</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Haptics</div>
+                            </div>
+                            <div class="toggle on"><div class="toggle-knob"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Two-Device Mode -->
+                    <div class="settings-section-label">Two-Device Mode</div>
+                    <div class="settings-card two-device-card">
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">devices</span></span>
+                            <div class="row-content">
+                                <div class="row-title" style="display: flex; align-items: center; gap: 8px;">
+                                    Set up Taija's phone
+                                    <span style="background: linear-gradient(135deg, var(--grad-start), var(--grad-end)); color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;">New</span>
+                                </div>
+                                <div class="row-subtitle">Play anytime, send pokes, track steps</div>
+                            </div>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+                    <div class="settings-info-text">Your progress and history will sync to Taija's device</div>
+
+                    <!-- Account -->
+                    <div class="settings-section-label">Account</div>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">email</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Email</div>
+                            </div>
+                            <span style="font-size: 13px; color: var(--text-light);">joakim@example.com</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">star</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Subscription</div>
+                            </div>
+                            <span style="font-size: 13px; color: #22C55E; font-weight: 700;">Premium <span class="material-icons-round" style="font-size: 14px; vertical-align: middle;">check_circle</span></span>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <div class="settings-section-label">About</div>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">info</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Version</div>
+                            </div>
+                            <span style="font-size: 13px; color: var(--text-light);">2.1.0</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="row-icon"><span class="material-icons-round">chat_bubble</span></span>
+                            <div class="row-content">
+                                <div class="row-title">Help & Feedback</div>
+                            </div>
+                            <span class="row-chevron">&#x203A;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        /* Toggle switch */
+        .toggle {
+            width: 48px;
+            height: 28px;
+            border-radius: 14px;
+            background: var(--beige);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle.on {
+            background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+        }
+        .toggle-knob {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .toggle.on .toggle-knob {
+            transform: translateX(20px);
+        }
+
+        /* Settings scene needs to be scrollable */
+        .settings-scene {
+            height: 100%;
+            overflow-y: auto;
+        }
+        .settings-scene::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const scenes = {
+            poke: document.getElementById('scene-poke'),
+            steps: document.getElementById('scene-steps'),
+            settings: document.getElementById('scene-settings')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                // Update tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Switch scenes
+                Object.values(scenes).forEach(s => s.classList.remove('active'));
+
+                // Small delay for popup animation
+                setTimeout(() => {
+                    scenes[target].classList.add('active');
+                }, 50);
+            });
+        });
+
+        // Toggle switches
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('on');
+            });
+        });
+    </script>
+</body>
+</html>

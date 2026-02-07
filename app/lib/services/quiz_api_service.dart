@@ -285,10 +285,12 @@ class QuizApiService {
   /// [sessionId] - The session ID
   /// [answers] - Array of answer indices
   /// [predictions] - Optional predictions for Would You Rather
+  /// [onBehalfOf] - Optional phantom user ID for single-phone mode
   Future<QuizSubmitResult> submitAnswers({
     required String sessionId,
     required List<int> answers,
     List<int>? predictions,
+    String? onBehalfOf,
   }) async {
     try {
       final body = <String, dynamic>{
@@ -298,6 +300,10 @@ class QuizApiService {
 
       if (predictions != null) {
         body['predictions'] = predictions;
+      }
+
+      if (onBehalfOf != null) {
+        body['onBehalfOf'] = onBehalfOf;
       }
 
       final response = await _apiRequest(

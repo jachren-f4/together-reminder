@@ -9,6 +9,8 @@ import { withAuth } from '@/lib/auth/middleware';
 import { RateLimitPresets, withRateLimit } from '@/lib/auth/rate-limit';
 import { query, getClient } from '@/lib/db/pool';
 import { randomUUID } from 'crypto';
+import { getPhantomPartnerId } from '@/lib/phantom/utils';
+import { mergePhantomToReal } from '@/lib/phantom/merge';
 
 export const dynamic = 'force-dynamic';
 
@@ -110,15 +112,96 @@ export const POST = withRateLimit(
       );
 
       if (partnerCouple.rows.length > 0) {
-        await client.query('ROLLBACK');
-        client.release();
-        return NextResponse.json(
-          { error: 'This person is already paired with someone else' },
-          { status: 400 }
+        // Partner has an existing couple — check if it has a phantom partner
+        const existingCoupleId = partnerCouple.rows[0].id;
+        const phantomUserId = await getPhantomPartnerId(existingCoupleId, client);
+
+        if (!phantomUserId) {
+          // No phantom — partner is genuinely paired with someone else
+          await client.query('ROLLBACK');
+          client.release();
+          return NextResponse.json(
+            { error: 'This person is already paired with someone else' },
+            { status: 400 }
+          );
+        }
+
+        // Phantom partner found — merge phantom into real user
+        const mergeResult = await mergePhantomToReal(
+          client,
+          existingCoupleId,
+          phantomUserId,
+          userId
         );
+
+        if (!mergeResult.success) {
+          await client.query('ROLLBACK');
+          client.release();
+          console.error('Phantom merge failed:', mergeResult.error);
+          return NextResponse.json(
+            { error: 'Failed to complete pairing. Please try again.' },
+            { status: 500 }
+          );
+        }
+
+        // Mark invite as used (with the existing couple ID)
+        await client.query(
+          `UPDATE couple_invites
+           SET used_at = NOW(), used_by = $1, couple_id = $2
+           WHERE id = $3`,
+          [userId, existingCoupleId, invite.id]
+        );
+
+        // Get partner info
+        const partnerResult = await client.query(
+          `SELECT email, raw_user_meta_data FROM auth.users WHERE id = $1`,
+          [partnerId]
+        );
+
+        // Get partner's push token
+        const partnerTokenResult = await client.query(
+          `SELECT fcm_token FROM user_push_tokens WHERE user_id = $1`,
+          [partnerId]
+        );
+        const partnerPushToken = partnerTokenResult.rows[0]?.fcm_token || null;
+
+        // Get couple created_at
+        const coupleInfo = await client.query(
+          `SELECT created_at FROM couples WHERE id = $1`,
+          [existingCoupleId]
+        );
+
+        await client.query('COMMIT');
+        client.release();
+
+        const partnerEmail = partnerResult.rows[0]?.email || null;
+        const partnerMetadata = partnerResult.rows[0]?.raw_user_meta_data as Record<string, any> | null;
+        const partnerName = partnerMetadata?.full_name ||
+                           partnerMetadata?.name ||
+                           partnerEmail?.split('@')[0] ||
+                           'Partner';
+
+        console.log(`Phantom merge complete: couple=${existingCoupleId}, phantom=${phantomUserId} → real=${userId}, tables=${mergeResult.tablesUpdated}`);
+
+        return NextResponse.json({
+          coupleId: existingCoupleId,
+          partnerId,
+          partnerEmail,
+          partnerName,
+          createdAt: coupleInfo.rows[0]?.created_at,
+          partner: {
+            id: partnerId,
+            name: partnerName,
+            email: partnerEmail,
+            pushToken: partnerPushToken,
+            avatarEmoji: '💕',
+          },
+          merged: true,
+          message: 'Successfully paired!',
+        });
       }
 
-      // Create couple
+      // No existing couple — create a new one (standard flow)
       const coupleId = randomUUID();
       const coupleResult = await client.query(
         `INSERT INTO couples (id, user1_id, user2_id, created_at, updated_at)
