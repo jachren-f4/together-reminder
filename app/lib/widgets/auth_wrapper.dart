@@ -10,9 +10,8 @@ import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../services/app_bootstrap_service.dart';
 import '../screens/onboarding/value_carousel_screen.dart';
-import '../screens/onboarding/anniversary_screen.dart';
 import '../screens/name_entry_screen.dart';
-import '../screens/pairing_screen.dart';
+import '../screens/partner_name_entry_screen.dart';
 import '../screens/main_screen.dart';
 import '../services/notification_service.dart';
 import 'editorial/editorial_styles.dart';
@@ -184,8 +183,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
         return const MainScreen();
       }
 
-      // Still no partner after bootstrap - show anniversary screen (which leads to pairing)
-      return const AnniversaryScreen();
+      // Still no partner after bootstrap - show partner name entry (single-phone mode)
+      // This screen creates the phantom partner, then navigates to AnniversaryScreen
+      return const PartnerNameEntryScreen();
     }
   }
 
