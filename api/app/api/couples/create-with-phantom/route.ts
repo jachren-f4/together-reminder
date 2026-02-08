@@ -86,13 +86,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       [coupleId, userId, phantomUserId]
     );
 
-    // Insert into user_couples lookup table for both users
-    // Use upsert in case stale rows exist from a previous couple
-    await client.query(
-      `INSERT INTO user_couples (user_id, couple_id) VALUES ($1, $2), ($3, $2)
-       ON CONFLICT (user_id) DO UPDATE SET couple_id = EXCLUDED.couple_id`,
-      [userId, coupleId, phantomUserId]
-    );
+    // Note: user_couples rows are auto-created by the sync_user_couples trigger
+    // on the couples table (migration 027). No manual insert needed.
 
     // Initialize couple_unlocks row
     await client.query(
