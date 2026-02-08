@@ -109,8 +109,11 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
 
       // Check if user has already answered
       if (data.status.userHasAnswered) {
-        if (data.status.bothCompleted && data.results != null) {
-          // Both completed - go to results
+        final isTogether = PlayModeService().isSinglePhone;
+        final isP1InTogetherMode = isTogether && !widget.isSecondPlayer;
+
+        if (data.status.bothCompleted && data.results != null && !isP1InTogetherMode) {
+          // Both completed and this is P2 (or two-phone mode) - go to results
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => WelcomeQuizResultsScreen(
@@ -118,8 +121,31 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
               ),
             ),
           );
+        } else if (isTogether) {
+          // Together mode: show handoff → P2 plays same quiz
+          final playMode = PlayModeService();
+          final partnerName = playMode.partnerName;
+          final phantomUserId = playMode.phantomUserId;
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TogetherHandoffScreen(
+                partnerName: partnerName,
+                onReady: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => WelcomeQuizGameScreen(
+                        isSecondPlayer: true,
+                        onBehalfOfUserId: phantomUserId,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
         } else {
-          // Just user completed - go to waiting
+          // Two-phone mode: go to waiting screen
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => const WelcomeQuizWaitingScreen(),
