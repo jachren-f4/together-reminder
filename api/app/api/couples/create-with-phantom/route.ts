@@ -87,8 +87,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     );
 
     // Insert into user_couples lookup table for both users
+    // Use upsert in case stale rows exist from a previous couple
     await client.query(
-      `INSERT INTO user_couples (user_id, couple_id) VALUES ($1, $2), ($3, $2)`,
+      `INSERT INTO user_couples (user_id, couple_id) VALUES ($1, $2), ($3, $2)
+       ON CONFLICT (user_id) DO UPDATE SET couple_id = EXCLUDED.couple_id`,
       [userId, coupleId, phantomUserId]
     );
 
