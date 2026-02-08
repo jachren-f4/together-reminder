@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/screens/pairing_screen.dart';
+import 'package:togetherremind/screens/onboarding/notification_permission_screen.dart';
+import 'package:togetherremind/services/storage_service.dart' show StorageService;
 
 /// Screen 07: Anniversary Date
 ///
@@ -111,11 +113,7 @@ class _AnniversaryScreenState extends State<AnniversaryScreen> {
     }
 
     if (mounted) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const PairingScreen(),
-        ),
-      );
+      _navigateToNextScreen();
     }
   }
 
@@ -124,11 +122,28 @@ class _AnniversaryScreenState extends State<AnniversaryScreen> {
       Navigator.pop(context);
       return;
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const PairingScreen(),
-      ),
-    );
+    _navigateToNextScreen();
+  }
+
+  void _navigateToNextScreen() {
+    // If user already has a partner (phantom from single-phone mode),
+    // skip pairing and go straight to notifications → welcome quiz
+    final hasPartner = StorageService().hasPartner();
+
+    if (hasPartner) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const NotificationPermissionScreen(),
+        ),
+        (route) => false,
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const PairingScreen(),
+        ),
+      );
+    }
   }
 
   void _handleBack() {

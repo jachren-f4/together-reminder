@@ -215,8 +215,11 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
         return;
       }
 
-      if (result.bothCompleted && result.results != null) {
-        // Both completed - go to results
+      final isTogether = PlayModeService().isSinglePhone;
+      final isP1InTogetherMode = isTogether && !widget.isSecondPlayer;
+
+      if (result.bothCompleted && result.results != null && !isP1InTogetherMode) {
+        // Both completed and this is P2 (or two-phone mode) - go to results
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => WelcomeQuizResultsScreen(
@@ -225,8 +228,7 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
           ),
         );
       } else {
-        // Waiting for partner
-        final isTogether = PlayModeService().isSinglePhone;
+        // P1 in together mode always shows handoff, regardless of bothCompleted
 
         if (isTogether) {
           // Together mode: show handoff → P2 plays same quiz

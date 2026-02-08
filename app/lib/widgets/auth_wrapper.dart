@@ -12,6 +12,7 @@ import '../services/app_bootstrap_service.dart';
 import '../screens/onboarding/value_carousel_screen.dart';
 import '../screens/name_entry_screen.dart';
 import '../screens/partner_name_entry_screen.dart';
+import '../screens/onboarding/notification_permission_screen.dart';
 import '../screens/main_screen.dart';
 import '../services/notification_service.dart';
 import 'editorial/editorial_styles.dart';
@@ -44,12 +45,19 @@ class _AuthWrapperState extends State<AuthWrapper> {
   bool _hasCheckedBypass = false;
   bool _shouldBypassAuth = false;
 
+  // Onboarding completion state
+  bool _hasCheckedOnboarding = false;
+  bool _onboardingFullyCompleted = false;
+
   @override
   void initState() {
     super.initState();
 
     // Check if we should bypass auth (simulators/web only)
     _checkBypassStatus();
+
+    // Check if onboarding is fully completed
+    _checkOnboardingStatus();
 
     // Clear stale iOS Keychain data if needed
     _clearStaleKeychainDataIfNeeded();
@@ -99,6 +107,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     if (hasCompletedOnboarding == 'true' && !_authService.isAuthenticated) {
       debugPrint('🔄 Clearing stale Keychain data (flags but no Supabase session)');
       await _secureStorage.delete(key: 'has_completed_onboarding');
+      await _secureStorage.delete(key: 'onboarding_fully_completed');
       await _secureStorage.delete(key: 'couple_id');
       await _secureStorage.delete(key: 'pending_user_name');
     }
@@ -115,6 +124,42 @@ class _AuthWrapperState extends State<AuthWrapper> {
     }
   }
 
+  /// Check if onboarding has been fully completed (past Welcome Quiz + Paywall)
+  Future<void> _checkOnboardingStatus() async {
+    final value = await _secureStorage.read(key: 'onboarding_fully_completed');
+    if (value == 'true') {
+      if (mounted) {
+        setState(() {
+          _onboardingFullyCompleted = true;
+          _hasCheckedOnboarding = true;
+        });
+      }
+      return;
+    }
+
+    // Backward compat: existing users who onboarded before this flag existed.
+    // If they have has_completed_onboarding AND a partner, they're fully done.
+    final hasLegacyFlag = await _secureStorage.read(key: 'has_completed_onboarding');
+    if (hasLegacyFlag == 'true' && _storageService.hasPartner()) {
+      // Backfill the new flag so this only runs once
+      await _secureStorage.write(key: 'onboarding_fully_completed', value: 'true');
+      if (mounted) {
+        setState(() {
+          _onboardingFullyCompleted = true;
+          _hasCheckedOnboarding = true;
+        });
+      }
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _onboardingFullyCompleted = false;
+        _hasCheckedOnboarding = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Set app context for NotificationService
@@ -122,8 +167,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
       NotificationService.setAppContext(context);
     });
 
-    // Wait for bypass check to complete
-    if (!_hasCheckedBypass) {
+    // Wait for async checks to complete
+    if (!_hasCheckedBypass || !_hasCheckedOnboarding) {
       return _buildLoadingScreen('Loading...');
     }
 
@@ -163,7 +208,12 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     // Check partner status
     if (_storageService.hasPartner()) {
-      // Has partner - bootstrap and show MainScreen
+      if (!_onboardingFullyCompleted) {
+        // Has partner but onboarding not finished (e.g., phantom partner created
+        // but app killed before Welcome Quiz). Resume onboarding.
+        return const NotificationPermissionScreen();
+      }
+      // Has partner and onboarding complete - bootstrap and show MainScreen
       return _buildWithBootstrap();
     } else {
       // No local partner - try bootstrap to restore from server

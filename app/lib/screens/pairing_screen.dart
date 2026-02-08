@@ -202,6 +202,12 @@ class _PairingScreenState extends State<PairingScreen> {
         await AppBootstrapService.instance.bootstrap();
         Logger.debug('Bootstrap completed after pairing', service: 'pairing');
 
+        // Mark onboarding as fully completed
+        await const FlutterSecureStorage().write(
+          key: 'onboarding_fully_completed',
+          value: 'true',
+        );
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const MainScreen(),

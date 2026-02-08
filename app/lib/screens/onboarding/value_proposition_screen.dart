@@ -4,6 +4,7 @@ import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/screens/paywall_screen.dart';
 import 'package:togetherremind/screens/already_subscribed_screen.dart';
 import 'package:togetherremind/screens/main_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:togetherremind/services/subscription_service.dart';
 import 'package:togetherremind/utils/logger.dart';
 
@@ -79,7 +80,13 @@ class _ValuePropositionScreenState extends State<ValuePropositionScreen> {
     }
   }
 
-  static void _navigateToMainScreen(BuildContext context) {
+  static Future<void> _navigateToMainScreen(BuildContext context) async {
+    // Mark onboarding as fully completed (used by AuthWrapper on restart)
+    await const FlutterSecureStorage().write(
+      key: 'onboarding_fully_completed',
+      value: 'true',
+    );
+    if (!context.mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => const MainScreen(showLpIntro: false),
